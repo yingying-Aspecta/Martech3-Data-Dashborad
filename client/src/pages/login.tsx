@@ -4,6 +4,8 @@ import { useEffect, useRef } from "react";
 import { Box, Container, Typography } from "@mui/material";
 import { ThemedTitle } from "@refinedev/mui";
 
+import { yariga } from "../assets";
+import { martech3 } from "../assets";
 import { CredentialResponse } from "../interfaces/google";
 
 // Todo: Update your Google Client ID here
@@ -59,13 +61,9 @@ export const Login: React.FC = () => {
         justifyContent="center"
         flexDirection="column"
       >
-        <ThemedTitle
-          collapsed={false}
-          wrapperStyles={{
-            fontSize: "22px",
-            justifyContent: "center",
-          }}
-        />
+        <div>
+          <img src={martech3} alt="Martech Logo" />
+        </div>
 
         <GoogleButton />
 
