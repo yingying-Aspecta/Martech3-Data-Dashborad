@@ -16,7 +16,7 @@ const router = express.Router();
 router.route("/").get(getAllHolders);
 router.route("/:id").get(getHolderDetail);
 router.route("/getHolderAndAsset/:contract_address").get(getHolderAndAsset);
-router.route("/getLabelAndHolder").get(getLabelAndHolder);
+router.route("/getLabelAndHolder/:contract_address").get(getLabelAndHolder);
 router.route("/").post(createHolder);
 router.route("/:id").patch(updateHolder);
 router.route("/:id").delete(deleteHolder);

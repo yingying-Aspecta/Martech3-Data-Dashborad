@@ -134,11 +134,54 @@ const getHolderAndAsset = async (req, res) => {
 };
 
 const getLabelAndHolder = async (req, res) => {
-    try {
-    } catch (error) {
-        res.status(500).json({ message: error.message });
+  const { contract_address } = req.params;
+
+  try {
+    const holders = await Holder.find({
+      "assets.crypto_holdings.tokens": {
+        $elemMatch: {
+          contract_address: contract_address,
+        },
+      },
+    });
+
+    if (holders) {
+        // 1. get all the labels
+        var labelSet = new Set();
+        holders.map((holder) => {
+            holder.assets.crypto_holdings.tokens.map((token) => {
+                for (let label of token.label) {
+                    labelSet.add(label);
+                }
+            });
+        });
+        var labels = Array.from(labelSet);
+
+        // 2. get the number of each label
+        var counts = [];
+        labels.map((label) => {
+            var count = 0;
+            holders.map((holder) => {
+                holder.assets.crypto_holdings.tokens.map((token) => {
+                    if (token.label.includes(label)) {
+                        count += 1;
+                    }
+                });
+            });
+            counts.push(count);
+        });
+
+        res.status(200).json({
+            labels: labels,
+            counts: counts,
+        }); 
+    } else {
+      res.status(404).json({ message: "Holder not found" });
     }
-}
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
 
 export {
   getAllHolders,
