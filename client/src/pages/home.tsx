@@ -36,15 +36,15 @@ const Home = () => {
         gap={4}
       >
         <TotalRevenue />
-        {/* <PropertyReferrals /> */}
-        <Box mt="20px" width="300px" display="flex" flexWrap="wrap" gap={4}>
+        <PropertyReferrals />
+        {/* <Box mt="20px" width="300px" display="flex" flexWrap="wrap" gap={4}>
           <PieChart
             title="User Number"
             value={684}
             series={[25, 25, 50]}
-            colors={["#275be8", "#c4e8ef", "#e4e8ef"]}
+            colors={["#275be8", "#c4e8ef",]}
           />
-        </Box>
+        </Box> */}
       </Stack>
     </Box>
   );
