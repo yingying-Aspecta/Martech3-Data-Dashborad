@@ -1,82 +1,79 @@
-import { useLogin } from "@refinedev/core";
 import { useEffect, useRef } from "react";
-
-import { Box, Container, Typography } from "@mui/material";
-import { ThemedTitle } from "@refinedev/mui";
+import { useLogin } from "@refinedev/core";
+import { Container, Box } from "@mui/material";
 
 import { yariga } from "../assets";
-import { martech3 } from "../assets";
+
 import { CredentialResponse } from "../interfaces/google";
 
-// Todo: Update your Google Client ID here
-const GOOGLE_CLIENT_ID =
-  "1041339102270-jlljcjl19jo1hkgf695em3ibr7q2m734.apps.googleusercontent.com";
-
 export const Login: React.FC = () => {
-  const { mutate: login } = useLogin<CredentialResponse>();
+    const { mutate: login } = useLogin<CredentialResponse>({
+        v3LegacyAuthProviderCompatible: true,
+    });
 
-  const GoogleButton = (): JSX.Element => {
-    const divRef = useRef<HTMLDivElement>(null);
+    const GoogleButton = (): JSX.Element => {
+        const divRef = useRef<HTMLDivElement>(null);
 
-    useEffect(() => {
-      if (typeof window === "undefined" || !window.google || !divRef.current) {
-        return;
-      }
-
-      try {
-        window.google.accounts.id.initialize({
-          ux_mode: "popup",
-          client_id: GOOGLE_CLIENT_ID,
-          callback: async (res: CredentialResponse) => {
-            if (res.credential) {
-              login(res);
+        useEffect(() => {
+            if (
+                typeof window === "undefined" ||
+                !window.google ||
+                !divRef.current
+            ) {
+                return;
             }
-          },
-        });
-        window.google.accounts.id.renderButton(divRef.current, {
-          theme: "filled_blue",
-          size: "medium",
-          type: "standard",
-        });
-      } catch (error) {
-        console.log(error);
-      }
-    }, []);
 
-    return <div ref={divRef} />;
-  };
+            try {
+                window.google.accounts.id.initialize({
+                    ux_mode: "popup",
+                    client_id: process.env.REACT_APP_GOOGLE_CLIENT_ID,
+                    callback: async (res: CredentialResponse) => {
+                        if (res.credential) {
+                            login(res);
+                        }
+                    },
+                });
+                window.google.accounts.id.renderButton(divRef.current, {
+                    theme: "filled_blue",
+                    size: "medium",
+                    type: "standard",
+                });
+            } catch (error) {
+                console.log(error);
+            }
+        }, []); // you can also add your client id as dependency here
 
-  return (
-    <Container
-      style={{
-        height: "100vh",
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-      }}
-    >
-      <Box
-        display="flex"
-        gap="36px"
-        justifyContent="center"
-        flexDirection="column"
-      >
-        <div>
-          <img src={martech3} alt="Martech Logo" />
-        </div>
+        return <div ref={divRef} />;
+    };
 
-        <GoogleButton />
-
-        <Typography align="center" color={"text.secondary"} fontSize="12px">
-          Powered by
-          <img
-            style={{ padding: "0 5px" }}
-            alt="Google"
-            src="https://refine.ams3.cdn.digitaloceanspaces.com/superplate-auth-icons%2Fgoogle.svg"
-          />
-          Google
-        </Typography>
-      </Box>
-    </Container>
-  );
+    return (
+        <Box component="div" sx={{ backgroundColor: "#FCFCFC" }}>
+            <Container
+                component="main"
+                maxWidth="xs"
+                sx={{
+                    display: "flex",
+                    flexDirection: "column",
+                    justifyContent: "center",
+                    height: "100vh",
+                }}
+            >
+                <Box
+                    sx={{
+                        display: "flex",
+                        justifyContent: "center",
+                        flexDirection: "column",
+                        alignItems: "center",
+                    }}
+                >
+                    <div>
+                        <img src={yariga} alt="Yariga Logo" />
+                    </div>
+                    {/* <Box mt={4}>
+                        <GoogleButton />
+                    </Box> */}
+                </Box>
+            </Container>
+        </Box>
+    );
 };
