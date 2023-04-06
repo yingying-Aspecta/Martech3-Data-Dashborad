@@ -1,16 +1,10 @@
 [
   {
-    "item1": { "label": "apple", "quantity": 10 },
-    "item2": [
-      { "label": "orange", "quantity": 5 },
-      { "label": "banana", "quantity": 8 }
-    ]
+    "apple": 10,
+    "other_labels": [{ "orange": 5 }, { "banana": 8 }]
   },
   {
-    "item1": { "label": "orange", "quantity": 10 },
-    "item2": [
-      { "label": "apple", "quantity": 5 },
-      { "label": "banana", "quantity": 8 }
-    ]
+    "apple": 10,
+    "other_labels": [{ "orange": 5 }, { "banana": 8 }]
   }
 ]

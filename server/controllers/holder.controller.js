@@ -1,9 +1,10 @@
 import Holder from "../mongodb/models/holder.js";
-import User from "../mongodb/models/user.js";
 
 import mongoose from "mongoose";
 import * as dotenv from "dotenv";
 import { v2 as cloudinary } from "cloudinary";
+
+import axios from "axios";
 
 dotenv.config();
 
@@ -107,27 +108,21 @@ const getHolderAndAsset = async (req, res) => {
   const { contract_address } = req.params;
 
   try {
-    const holders = await Holder.find({
-      "assets.crypto_holdings.tokens": {
-        $elemMatch: {
-          contract_address: contract_address,
-        },
-      },
-    });
-
-    if (holders) {
-      var holderResponse = holders.map((holder) => {
-        return {
-          wallet_address: holder.wallet_address,
-          value: holder.assets.crypto_holdings.tokens.find(
-            (token) => token.contract_address === contract_address
-          ).Amount,
-        };
+    const params = new URLSearchParams();
+    params.append("module", "token");
+    params.append("action", "getTokenHolders");
+    params.append("contractaddress", contract_address);
+    params.append("page", 1);
+    params.append("offset", 10);
+    console.log(params.toString());
+    axios
+      .get("https://blockscout.scroll.io/api?" + params.toString())
+      .then((response) => {
+        res.status(200).json(response.data.result);
+      })
+      .catch((error) => {
+        res.status(500).json({ message: error.message });
       });
-      res.status(200).json(holderResponse);
-    } else {
-      res.status(404).json({ message: "Holder not found" });
-    }
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
@@ -146,35 +141,61 @@ const getLabelAndHolder = async (req, res) => {
     });
 
     if (holders) {
-        // 1. get all the labels
-        var labelSet = new Set();
-        holders.map((holder) => {
-            holder.assets.crypto_holdings.tokens.map((token) => {
-                for (let label of token.label) {
-                    labelSet.add(label);
-                }
-            });
+      // 1. get all the labels
+      var labelSet = new Set();
+      holders.map((holder) => {
+        holder.assets.crypto_holdings.tokens.map((token) => {
+          for (let label of token.label) {
+            labelSet.add(label);
+          }
         });
-        var labels = Array.from(labelSet);
-
-        // 2. get the number of each label
-        var counts = [];
-        labels.map((label) => {
-            var count = 0;
-            holders.map((holder) => {
-                holder.assets.crypto_holdings.tokens.map((token) => {
-                    if (token.label.includes(label)) {
-                        count += 1;
-                    }
-                });
-            });
-            counts.push(count);
+        holder.assets.crypto_holdings.transaction_activities.label.map(
+          (label) => {
+            labelSet.add(label);
+          }
+        );
+        holder.assets.nft_holdings.tokens.map((token) => {
+          for (let label of token.label) {
+            labelSet.add(label);
+          }
         });
+        holder.assets.nft_holdings.transaction_activities.label.map((label) => {
+          labelSet.add(label);
+        });
+        holder.social.social_activities.map((activity) => {
+          for (let label of activity.label) {
+            labelSet.add(label);
+          }
+        });
+        holder.third_party_recommendations.token_labels.map((label) => {
+          labelSet.add(label);
+        });
+        holder.third_party_recommendations.token_recommendations.map(
+          (recommendation) => {
+            for (let label of recommendation.label) {
+              labelSet.add(label);
+            }
+          }
+        );
+      });
+      var labels = Array.from(labelSet);
 
-        res.status(200).json({
-            labels: labels,
-            counts: counts,
-        }); 
+      var response = [];
+      // 2. get the number of each label
+      labels.map((label) => {
+        var label12 = {
+          other_labels: [],
+        };
+        label12[label] = getHolderNumOfLabel(label, holders);
+        labels.map((label2) => {
+          var obj = {};
+          obj[label2] = getHolderNumOfTwoLabel(label, label2, holders);
+          if (obj[label2] != 0) label12["other_labels"].push(obj);
+        });
+        response.push(label12);
+      });
+
+      res.status(200).json(response);
     } else {
       res.status(404).json({ message: "Holder not found" });
     }
@@ -182,6 +203,104 @@ const getLabelAndHolder = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
+
+function getHolderNumOfLabel(label, holders) {
+  var count = 0;
+  holders.map((holder) => {
+    holder.assets.crypto_holdings.tokens.map((token) => {
+      if (token.label.includes(label)) {
+        count += 1;
+      }
+    });
+    if (
+      holder.assets.crypto_holdings.transaction_activities.label.includes(label)
+    ) {
+      count += 1;
+    }
+    holder.assets.nft_holdings.tokens.map((token) => {
+      if (token.label.includes(label)) {
+        count += 1;
+      }
+    });
+    if (
+      holder.assets.nft_holdings.transaction_activities.label.includes(label)
+    ) {
+      count += 1;
+    }
+    holder.social.social_activities.map((activity) => {
+      if (activity.label.includes(label)) {
+        count += 1;
+      }
+    });
+    if (holder.third_party_recommendations.token_labels.includes(label)) {
+      count += 1;
+    }
+    holder.third_party_recommendations.token_recommendations.map(
+      (recommendation) => {
+        if (recommendation.label.includes(label)) {
+          count += 1;
+        }
+      }
+    );
+  });
+  return count;
+}
+
+function getHolderNumOfTwoLabel(label1, label2, holders) {
+  var count = 0;
+  holders.map((holder) => {
+    holder.assets.crypto_holdings.tokens.map((token) => {
+      if (token.label.includes(label1) && token.label.includes(label2)) {
+        count += 1;
+      }
+    });
+    if (
+      holder.assets.crypto_holdings.transaction_activities.label.includes(
+        label1
+      ) &&
+      holder.assets.crypto_holdings.transaction_activities.label.includes(
+        label2
+      )
+    ) {
+      count += 1;
+    }
+    holder.assets.nft_holdings.tokens.map((token) => {
+      if (token.label.includes(label1) && token.label.includes(label2)) {
+        count += 1;
+      }
+    });
+    if (
+      holder.assets.nft_holdings.transaction_activities.label.includes(
+        label1
+      ) &&
+      holder.assets.nft_holdings.transaction_activities.label.includes(label2)
+    ) {
+      count += 1;
+    }
+    holder.social.social_activities.map((activity) => {
+      if (activity.label.includes(label1) && activity.label.includes(label2)) {
+        count += 1;
+      }
+    });
+    if (
+      holder.third_party_recommendations.token_labels.includes(label1) &&
+      holder.third_party_recommendations.token_labels.includes(label2)
+    ) {
+      count += 1;
+    }
+    holder.third_party_recommendations.token_recommendations.map(
+      (recommendation) => {
+        if (
+          recommendation.label.includes(label1) &&
+          recommendation.label.includes(label2)
+        ) {
+          count += 1;
+        }
+      }
+    );
+  });
+  return count;
+}
 
 export {
   getAllHolders,
