@@ -1,0 +1,258 @@
+[
+  {
+    "user_id": "0x1234567891414241",
+    "wallet_address": "0xabcdef123456789",
+    "assets": {
+      "crypto_holdings": {
+        "current_time_stamp": 152441241,
+        "tokens": [
+          {
+            "name": "Tether USD",
+            "symbol": "USDT",
+            "network": "Ethereum",
+            "Amount": 16011.836832,
+            "decimals": 6,
+            "USDTvalue": 0.9999523458946621,
+            "value": 16011.073802240955,
+            "contract_address": "0xdac17f958d2ee523a2206206994597c13d831ec7",
+            "first_purchase_at": "1614760261",
+            "last_time_activity": "sell",
+            "total_supply": 35283904986,
+            "first_deploy_at": 1511800881,
+            "label": [
+              "payments",
+              "stablecoin",
+              "asset-backed-stablecoin",
+              "arbitrum-ecosytem",
+              "bnb-chain",
+              "usd-stablecoin"
+            ]
+          },
+          {
+            "name": "Wrapped Ether",
+            "symbol": "WETH",
+            "network": "Ethereum",
+            "Amount": 12.90113247241766,
+            "decimals": 18,
+            "USDTvalue": 1897.425624957228,
+            "value": 24478.939344133065,
+            "contract_address": "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
+            "first_purchase_at": "1623797348",
+            "last_time_activity": "sell",
+            "total_supply": 3696477,
+            "first_deploy_at": 1513048655,
+            "label": ["meme"]
+          }
+        ],
+        "total_asset_value": 300000,
+        "transaction_activities": {
+          "total_number": 10,
+          "30d_number": 5,
+          "30d_buy": 5,
+          "30d_sell": 5,
+          "label": ["mainStream", "stablecoin"]
+        }
+      },
+      "nft_holdings": {
+        "tokens": [
+          {
+            "nft_name": "CryptoPunks",
+            "network": "ETH",
+            "amount": 2,
+            "value": 300000,
+            "holding_value": 100000,
+            "first_purchase_at": 142421331,
+            "rarity": 10,
+            "label": ["OG", "NFT holder"]
+          }
+        ],
+        "total_asset_value": 300000,
+        "transaction_activities": {
+          "total_number": 10,
+          "30d_number": 5,
+          "30d_buy": 5,
+          "30d_sell": 5,
+          "label": ["NFT", "OG"]
+        }
+      }
+    },
+    "social": {
+      "social_activities": [
+        {
+          "name": "Vote for BTC fork",
+          "id": 123,
+          "network": "ETH",
+          "type": "votespace",
+          "label": ["mainstream token", "governance", "positive"]
+        },
+        {
+          "name": "Defi Meeting",
+          "id": 123,
+          "network": "ETH",
+          "type": "POAP",
+          "label": ["social", "defi"]
+        },
+        {
+          "name": "why we love BTC",
+          "id": 123,
+          "network": "ETH",
+          "type": "Lens posts",
+          "label": ["mainstream token"]
+        },
+        {
+          "name": "why we love BTC",
+          "id": 123,
+          "network": "Polygon",
+          "type": "Lens like",
+          "label": ["mainstream token"]
+        },
+        {
+          "name": "why we love BTC",
+          "id": 123,
+          "network": "BSC",
+          "type": "Cyberconnect like",
+          "label": ["mainstream token"]
+        }
+      ]
+    },
+    "third_party_recommendations": {
+      "token_labels": ["Bitfinex User", "Stablecoin User", "OKEx User"],
+      "token_recommendations": [
+        {
+          "name": "Tether",
+          "contractAddress": "0x123456789abcdefg",
+          "score": 1.114514,
+          "labels": ["Stablecoin"]
+        }
+      ]
+    }
+  },
+  {
+    "user_id": "0x1234567891414241",
+    "wallet_address": "0xabcdef123456789",
+    "assets": {
+      "crypto_holdings": {
+        "current_time_stamp": 152441241,
+        "tokens": [
+          {
+            "name": "Tether USD",
+            "symbol": "USDT",
+            "network": "Ethereum",
+            "Amount": 16011.836832,
+            "decimals": 6,
+            "USDTvalue": 0.9999523458946621,
+            "value": 16011.073802240955,
+            "contract_address": "0xdac17f958d2ee523a2206206994597c13d831ec7",
+            "first_purchase_at": "1614760261",
+            "last_time_activity": "sell",
+            "total_supply": 35283904986,
+            "first_deploy_at": 1511800881,
+            "label": [
+              "payments",
+              "stablecoin",
+              "asset-backed-stablecoin",
+              "arbitrum-ecosytem",
+              "bnb-chain",
+              "usd-stablecoin"
+            ]
+          },
+          {
+            "name": "Wrapped Ether",
+            "symbol": "WETH",
+            "network": "Ethereum",
+            "Amount": 12.90113247241766,
+            "decimals": 18,
+            "USDTvalue": 1897.425624957228,
+            "value": 24478.939344133065,
+            "contract_address": "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
+            "first_purchase_at": "1623797348",
+            "last_time_activity": "sell",
+            "total_supply": 3696477,
+            "first_deploy_at": 1513048655,
+            "label": ["meme"]
+          }
+        ],
+        "total_asset_value": 300000,
+        "transaction_activities": {
+          "total_number": 10,
+          "30d_number": 5,
+          "30d_buy": 5,
+          "30d_sell": 5,
+          "label": ["mainStream", "stablecoin"]
+        }
+      },
+      "nft_holdings": {
+        "tokens": [
+          {
+            "nft_name": "CryptoPunks",
+            "network": "ETH",
+            "amount": 2,
+            "value": 300000,
+            "holding_value": 100000,
+            "first_purchase_at": 142421331,
+            "rarity": 10,
+            "label": ["OG", "NFT holder"]
+          }
+        ],
+        "total_asset_value": 300000,
+        "transaction_activities": {
+          "total_number": 10,
+          "30d_number": 5,
+          "30d_buy": 5,
+          "30d_sell": 5,
+          "label": ["NFT", "OG"]
+        }
+      }
+    },
+    "social": {
+      "social_activities": [
+        {
+          "name": "Vote for BTC fork",
+          "id": 123,
+          "network": "ETH",
+          "type": "votespace",
+          "label": ["mainstream token", "governance", "positive"]
+        },
+        {
+          "name": "Defi Meeting",
+          "id": 123,
+          "network": "ETH",
+          "type": "POAP",
+          "label": ["social", "defi"]
+        },
+        {
+          "name": "why we love BTC",
+          "id": 123,
+          "network": "ETH",
+          "type": "Lens posts",
+          "label": ["mainstream token"]
+        },
+        {
+          "name": "why we love BTC",
+          "id": 123,
+          "network": "Polygon",
+          "type": "Lens like",
+          "label": ["mainstream token"]
+        },
+        {
+          "name": "why we love BTC",
+          "id": 123,
+          "network": "BSC",
+          "type": "Cyberconnect like",
+          "label": ["mainstream token"]
+        }
+      ]
+    },
+    "third_party_recommendations": {
+      "token_labels": ["Bitfinex User", "Stablecoin User", "OKEx User"],
+      "token_recommendations": [
+        {
+          "name": "Tether",
+          "contractAddress": "0x123456789abcdefg",
+          "score": 1.114514,
+          "labels": ["Stablecoin"]
+        }
+      ]
+    }
+  }
+]
