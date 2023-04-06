@@ -146,35 +146,34 @@ const getLabelAndHolder = async (req, res) => {
     });
 
     if (holders) {
-        // 1. get all the labels
-        var labelSet = new Set();
-        holders.map((holder) => {
-            holder.assets.crypto_holdings.tokens.map((token) => {
-                for (let label of token.label) {
-                    labelSet.add(label);
-                }
-            });
+      // 1. get all the labels
+      var labelSet = new Set();
+      holders.map((holder) => {
+        holder.assets.crypto_holdings.tokens.map((token) => {
+          for (let label of token.label) {
+            labelSet.add(label);
+          }
         });
-        var labels = Array.from(labelSet);
+      });
+      var labels = Array.from(labelSet);
 
-        // 2. get the number of each label
-        var counts = [];
-        labels.map((label) => {
-            var count = 0;
-            holders.map((holder) => {
-                holder.assets.crypto_holdings.tokens.map((token) => {
-                    if (token.label.includes(label)) {
-                        count += 1;
-                    }
-                });
-            });
-            counts.push(count);
+      var response = [];
+      // 2. get the number of each label
+      labels.map((label) => {
+        var label12 = {
+          other_labels: [],
+        };
+        label12[label] = getHolderNumOfLabel(label, holders);
+        labels.map((label2) => {
+          var obj = {};
+          obj[label2] = getHolderNumOfTwoLabel(label, label2, holders);
+          if (obj[label2] != 0)
+            label12["other_labels"].push(obj);
         });
+        response.push(label12);
+      });
 
-        res.status(200).json({
-            labels: labels,
-            counts: counts,
-        }); 
+      res.status(200).json(response);
     } else {
       res.status(404).json({ message: "Holder not found" });
     }
@@ -182,6 +181,30 @@ const getLabelAndHolder = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
+
+function getHolderNumOfLabel(label, holders) {
+  var count = 0;
+  holders.map((holder) => {
+    holder.assets.crypto_holdings.tokens.map((token) => {
+      if (token.label.includes(label)) {
+        count += 1;
+      }
+    });
+  });
+  return count;
+}
+
+function getHolderNumOfTwoLabel(label1, label2, holders) {
+  var count = 0;
+  holders.map((holder) => {
+    holder.assets.crypto_holdings.tokens.map((token) => {
+      if (token.label.includes(label1) && token.label.includes(label2)) {
+        count += 1;
+      }
+    });
+  });
+  return count;
+}
 
 export {
   getAllHolders,
