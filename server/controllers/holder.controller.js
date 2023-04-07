@@ -15,17 +15,14 @@ cloudinary.config({
 });
 
 const getAllHolders = async (req, res) => {
-  const { _end, _order, _start, _sort } = req.query;
+  const { _limit } = req.query;
 
   const query = {};
 
   try {
     const count = await Holder.countDocuments({ query });
 
-    const holders = await Holder.find(query)
-      .limit(_end)
-      .skip(_start)
-      .sort({ [_sort]: _order });
+    const holders = await Holder.find(query).limit(_limit);
 
     res.header("x-total-count", count);
     res.header("Access-Control-Expose-Headers", "x-total-count");
@@ -130,7 +127,7 @@ const getHolderAndAsset = async (req, res) => {
 
 const getLabelAndHolder = async (req, res) => {
   const { contract_address } = req.params;
-  const { _end, _order, _start, _sort } = req.query;
+  const { _limit } = req.query;
 
   try {
     const holders = await Holder.find({
@@ -139,7 +136,7 @@ const getLabelAndHolder = async (req, res) => {
           contract_address: contract_address,
         },
       },
-    }).limit(_end).skip(_start).sort({ [_sort]: _order });
+    }).limit(_limit);
 
     if (holders) {
       // 1. get all the labels
