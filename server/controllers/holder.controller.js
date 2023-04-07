@@ -111,7 +111,6 @@ const getHolderAndAsset = async (req, res) => {
     params.append("contractaddress", contract_address);
     params.append("page", 1);
     params.append("offset", 100);
-    console.log(params.toString());
     axios
       .get("https://blockscout.scroll.io/api?" + params.toString())
       .then((response) => {
@@ -161,7 +160,7 @@ const getLabelAndHolder = async (req, res) => {
           labelSet.add(label);
         });
         holder.social.social_activities.map((activity) => {
-          for (let label of activity.label) {
+          for (let label of activity.labels) {
             labelSet.add(label);
           }
         });
@@ -229,7 +228,7 @@ function getHolderNumOfLabel(label, holders) {
       count += 1;
     }
     holder.social.social_activities.map((activity) => {
-      if (activity.label.includes(label)) {
+      if (activity.labels.includes(label)) {
         count += 1;
       }
     });
@@ -279,7 +278,7 @@ function getHolderNumOfTwoLabel(label1, label2, holders) {
       count += 1;
     }
     holder.social.social_activities.map((activity) => {
-      if (activity.label.includes(label1) && activity.label.includes(label2)) {
+      if (activity.labels.includes(label1) && activity.labels.includes(label2)) {
         count += 1;
       }
     });

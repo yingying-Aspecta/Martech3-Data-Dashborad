@@ -1,7 +1,8 @@
 import mongoose from "mongoose";
 
+// 字段的key不要叫做type!
 const Holder = new mongoose.Schema({
-  user_id: {
+  _id: {
     type: String,
   },
   wallet_address: {
@@ -90,14 +91,17 @@ const Holder = new mongoose.Schema({
     },
   },
   social: {
+    identity_holdings: {
+      type: [String],
+    },
     social_activities: {
       type: [
         {
           name: String,
           id: Number,
           network: String,
-          type: String,
-          label: [String],
+          createdAt: String,
+          labels: [String],
         },
       ],
     },
