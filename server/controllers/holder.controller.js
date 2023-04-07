@@ -157,11 +157,11 @@ const getHolderAndAsset = async (req, res) => {
         percent_other = num - percent1 - percent_5 - percent_2 - percent_1;
         
         res.status(200).json({
-          "> 1%": percent1,
-          "> 0.5%": percent_5,
-          "> 0.2%": percent_2,
-          "> 0.1%": percent_1,
-          "other": percent_other,
+          "> 1%": percent1 * 100 / num,
+          "> 0.5%": percent_5 * 100 / num,
+          "> 0.2%": percent_2 * 100 / num,
+          "> 0.1%": percent_1 * 100 / num,
+          "other": percent_other * 100 / num,
         });
       })
       .catch((error) => {
