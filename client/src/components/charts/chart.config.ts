@@ -14,50 +14,57 @@ interface ChartSeriesItem {
 }
 
 export interface ChartData {
-  categoriesArray: string[][];
-  dataArrays: number[][];
-  names: string[];
-  ChartSeries: ChartSeriesItem[];
-  Chartcategories: string[];
+  CategoriesArray: string[][]; //二级，用于选中一个label之后剩下的和他共有的label的数组
+  DataArrays: number[][]; //二级，用于选中一个label之后剩下的和他共有的label的数据的数组
+  ChartSeries: ChartSeriesItem; //一级，name是一级选中的label，data是一级的数据
+  ChartCategories: string[]; //一级，一级的label
 }
-export var ChartSeries = [
-  {
-    name: "Last Month",
-    data: [183, 124, 115, 85, 143, 143, 96],
-  },
-];
-export var Chartcategories = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul"];
+// export var ChartSeries = [
+//   {
+//     name: "Last Month",
+//     data: [183, 124, 115, 85, 143, 143, 96],
+//   },
+// ];
+// export var Chartcategories = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul"];
 
-export var categoriesArray = [
-  ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul"],
-  ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul"],
-  ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul"],
-  ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul"],
-  ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul"],
-  ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul"],
-  ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul"],
-];
-export var names = [
-  "Last Month",
-  "Last Month",
-  "This Month",
-  "This Month",
-  "This Month",
-  "This Month",
-  "This Month",
-  "This Month",
-];
+// export var categoriesArray = [
+//   ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul"],
+//   ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul"],
+//   ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul"],
+//   ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul"],
+//   ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul"],
+//   ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul"],
+//   ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul"],
+// ];
+// export var names = [
+//   "Last Month",
+//   "Last Month",
+//   "This Month",
+//   "This Month",
+//   "This Month",
+//   "This Month",
+//   "This Month",
+//   "This Month",
+// ];
+let Data: number[] = [];
+let ChartSeries = [{ name: "", data: Data }];
+let ChartCategories: string[] = [];
+let CategoriesArray: string[][] = [];
+let DataArrays: number[][] = [];
+
+export { ChartSeries, ChartCategories, CategoriesArray, DataArrays };
+
 // export var dataArrays = [];
-export var dataArrays = [
-  [183, 124, 115, 85, 143, 143, 10],
-  [183, 124, 115, 85, 143, 143, 20],
-  [150, 180, 100, 90, 120, 170, 30],
-  [150, 180, 100, 90, 120, 170, 40],
-  [150, 180, 100, 90, 120, 170, 50],
-  [150, 180, 100, 90, 120, 170, 60],
-  [150, 180, 100, 90, 120, 170, 70],
-  [150, 180, 100, 90, 120, 170, 80],
-];
+// export var dataArrays = [
+//   [183, 124, 115, 85, 143, 143, 10],
+//   [183, 124, 115, 85, 143, 143, 20],
+//   [150, 180, 100, 90, 120, 170, 30],
+//   [150, 180, 100, 90, 120, 170, 40],
+//   [150, 180, 100, 90, 120, 170, 50],
+//   [150, 180, 100, 90, 120, 170, 60],
+//   [150, 180, 100, 90, 120, 170, 70],
+//   [150, 180, 100, 90, 120, 170, 80],
+// ];
 
 export var ChartOptions: ApexOptions = {
   chart: {
@@ -90,7 +97,7 @@ export var ChartOptions: ApexOptions = {
     width: 4,
   },
   xaxis: {
-    categories: Chartcategories,
+    categories: ChartCategories,
   },
   yaxis: {
     title: {
@@ -123,7 +130,7 @@ export var ChartOptions: ApexOptions = {
   },
 };
 
-export var ChartOptionsArray: ApexOptions[] = categoriesArray.map(
+export var ChartOptionsArray: ApexOptions[] = CategoriesArray.map(
   (categories, index) => {
     return {
       chart: {
@@ -186,10 +193,10 @@ export var ChartOptionsArray: ApexOptions[] = categoriesArray.map(
   }
 );
 
-export var ChartSeriesArray = names.map((name, index) => {
+export var ChartSeriesArray = ChartCategories.map((_name, index) => {
   return {
-    name: name,
-    data: dataArrays[index],
+    name: _name,
+    data: DataArrays[index],
   };
 });
 
@@ -200,20 +207,19 @@ export async function fetchDataAndUpdate(): Promise<void> {
       "http://149.248.11.13:8080/api/v1/holders/getLabelAndHolder/0xdac17f958d2ee523a2206206994597c13d831ec7?_limit=3"
     );
     const data: DataItem[] = response.data;
-    console.log(data);
+    // console.log(data);
     // console.log("fetchDataAndUpdate");
     let updatedData: number[] = [];
     let updatedChartSeries: typeof ChartSeries = [];
     let updatedChartCategories: string[] = [];
-    let updatedNames: string[] = [];
     let updatedCategoriesArray: string[][] = [];
     let updatedDataArrays: number[][] = [];
+    let updatedChartSeriesArray: typeof ChartSeriesArray = [];
 
     console.log("ChartSeries", ChartSeries);
-    console.log("Chartcategories", Chartcategories);
-    console.log("categoriesArray", categoriesArray);
-    console.log("dataArrays", dataArrays);
-    console.log("names", names);
+    console.log("ChartCategories", ChartCategories);
+    console.log("CategoriesArray", CategoriesArray);
+    console.log("DataArrays", DataArrays);
 
     // console.log("updatedData", updatedData);
     // console.log("updatedChartSeries", updatedChartSeries);
@@ -232,8 +238,6 @@ export async function fetchDataAndUpdate(): Promise<void> {
       // 更新 updatedChartCategories
       updatedChartCategories.push(labelKey);
 
-      // 更新 updatedNames
-      updatedNames.push(labelKey);
       //   console.log("updatedData", updatedData);
       //   console.log("updatedChartSeries", updatedChartSeries);
       //   console.log("updatedChartCategories", updatedChartCategories);
@@ -256,6 +260,7 @@ export async function fetchDataAndUpdate(): Promise<void> {
         updatedCategoriesArray[index][i] = otherLabelKey;
         updatedDataArrays[index][i] = otherLabelValue;
       });
+
       //   console.log("updatedData", updatedData);
       //   console.log("updatedChartSeries", updatedChartSeries);
       //   console.log("updatedChartCategories", updatedChartCategories);
@@ -265,21 +270,27 @@ export async function fetchDataAndUpdate(): Promise<void> {
     });
 
     updatedChartSeries.push({
-      name: "Whole number", // 根据需要修改name
+      name: "Whole number",
       data: updatedData,
     });
-
+    updatedChartSeriesArray = updatedChartCategories.map((_name, index) => {
+      return {
+        name: _name,
+        data: updatedDataArrays[index],
+      };
+    });
     // 更新 ChartSeries, Chartcategories, categoriesArray, dataArrays 和 names
     ChartSeries = updatedChartSeries;
-    Chartcategories = updatedChartCategories;
-    categoriesArray = updatedCategoriesArray;
-    dataArrays = updatedDataArrays;
-    names = updatedNames;
+    ChartCategories = updatedChartCategories;
+    CategoriesArray = updatedCategoriesArray;
+    DataArrays = updatedDataArrays;
+    ChartSeriesArray = updatedChartSeriesArray;
+
     console.log("ChartSeries", ChartSeries);
-    console.log("Chartcategories", Chartcategories);
-    console.log("categoriesArray", categoriesArray);
-    console.log("dataArrays", dataArrays);
-    console.log("names", names);
+    console.log("ChartCategories", ChartCategories);
+    console.log("CategoriesArray", CategoriesArray);
+    console.log("DataArrays", DataArrays);
+    console.log("ChartSeriesArray", ChartSeriesArray);
   } catch (error) {
     console.error("Error fetching data:", error);
   }
