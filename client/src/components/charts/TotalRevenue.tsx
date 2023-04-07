@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { Box, Typography, Stack } from "@mui/material";
 import { ArrowCircleUpRounded } from "@mui/icons-material";
 import { Button } from "@mui/material";
-import { fetchDataAndUpdate } from "./chart.config";
+// import { fetchDataAndUpdate } from "./chart.config";
 
 import Chart from "react-apexcharts";
 import {
@@ -20,7 +20,29 @@ var C = [
     data: [183, 124, 115, 85, 143, 143, 96],
   },
 ];
-const TotalRevenue: React.FC = () => {
+interface ChartSeriesItem {
+  name: string;
+  data: number[];
+}
+interface TotalRevenueProps {
+  chartData: {
+    ChartSeries: ChartSeriesItem[];
+    ChartCategories: string[];
+    CategoriesArray: string[][];
+    DataArrays: number[][];
+    ChartSeriesArray: ChartSeriesItem[];
+  };
+}
+
+const TotalRevenue: React.FC<TotalRevenueProps> = ({ chartData }) => {
+  // 使用传入的 chartData 更新图表
+  const {
+    ChartSeries,
+    ChartCategories,
+    CategoriesArray,
+    DataArrays,
+    ChartSeriesArray,
+  } = chartData;
   const [showAnotherChart, setShowAnotherChart] = useState(false);
   const [clickedDataPointIndex, setClickedDataPointIndex] = useState<
     number | null
@@ -36,6 +58,13 @@ const TotalRevenue: React.FC = () => {
     if (clickedDataPointIndex !== -1) {
       setShowAnotherChart(true);
     }
+  };
+  const updatedChartOptions = {
+    ...ChartOptions,
+    xaxis: {
+      ...ChartOptions.xaxis,
+      categories: ChartCategories,
+    },
   };
 
   return (
@@ -75,9 +104,9 @@ const TotalRevenue: React.FC = () => {
             type="bar"
             height={550}
             options={{
-              ...ChartOptions,
+              ...updatedChartOptions,
               chart: {
-                ...ChartOptions.chart,
+                ...updatedChartOptions.chart,
                 events: { click: handleClick },
               },
             }}

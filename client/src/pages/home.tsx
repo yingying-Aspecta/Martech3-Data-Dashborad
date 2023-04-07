@@ -8,18 +8,54 @@ import {
   TotalRevenue,
   PropertyCard,
 } from "components";
-import { fetchDataAndUpdate } from "components/charts/chart.config";
+interface ChartData {
+  ChartSeries: ChartSeriesItem[];
+  ChartCategories: string[];
+  CategoriesArray: string[][];
+  DataArrays: number[][];
+  ChartSeriesArray: ChartSeriesItem[];
+}
+
+interface ChartSeriesItem {
+  name: string;
+  data: number[];
+}
+
+import { fetchData } from "components/charts/chart.config";
+
+// 创建一个异步函数，从后端获取数据并返回
+async function fetchChartData(): Promise<ChartData> {
+  // 在这里实现从后端获取数据的逻辑
+  // 假设您已经从后端获取了数据并将其存储在变量 `response` 中
+  const response = await fetchData();
+
+  // 返回所需的数据结构
+  return {
+    ChartCategories: response.ChartCategories,
+    ChartSeries: response.ChartSeries,
+    CategoriesArray: response.CategoriesArray,
+    DataArrays: response.DataArrays,
+    ChartSeriesArray: response.ChartSeriesArray,
+  };
+}
+
 const Home = () => {
-<<<<<<< HEAD
-=======
-  const [loading, setLoading] = useState(true);
+  const [chartData, setChartData] = useState<ChartData>({
+    ChartCategories: [],
+    ChartSeries: [],
+    CategoriesArray: [],
+    DataArrays: [],
+    ChartSeriesArray: [],
+  });
 
+  // 获取数据并更新状态
   useEffect(() => {
-    const timer = setTimeout(() => {
-      setLoading(false);
-    }, 2000); // 延迟 2000 毫秒 (2 秒) ，你可以根据需要调整这个值
+    const fetchDataAndUpdate = async () => {
+      const _data = await fetchChartData();
+      setChartData(_data);
+    };
 
-    return () => clearTimeout(timer); // 清除定时器以防止内存泄漏
+    fetchDataAndUpdate();
   }, []);
 
   const { data, isLoading, isError } = useList({
@@ -35,28 +71,24 @@ const Home = () => {
 
   // if (isLoading) return <Typography>Loading...</Typography>;
   //   if (isError) return <Typography>Something went wrong!</Typography>;
->>>>>>> 7df87db465781d8814278e54812ebe65940da4bc
 
-  if (loading) fetchDataAndUpdate();
+  //   if (loading) fetchDataAndUpdate();
   return (
     <Box>
-      {loading ? (
-        <Typography>Loading...</Typography>
-      ) : (
-        <>
-          <Typography fontSize={25} fontWeight={700} color="#11142D">
-            Dashboard
-          </Typography>
+      <>
+        <Typography fontSize={25} fontWeight={700} color="#11142D">
+          Dashboard
+        </Typography>
 
-          <Stack
-            mt="25px"
-            width="100%"
-            direction={{ xs: "column", lg: "row" }}
-            gap={4}
-          >
-            <TotalRevenue />
-            <PropertyReferrals />
-            {/* <Box mt="20px" width="300px" display="flex" flexWrap="wrap" gap={4}>
+        <Stack
+          mt="25px"
+          width="100%"
+          direction={{ xs: "column", lg: "row" }}
+          gap={4}
+        >
+          <TotalRevenue chartData={chartData} />
+          <PropertyReferrals />
+          {/* <Box mt="20px" width="300px" display="flex" flexWrap="wrap" gap={4}>
               <PieChart
                 title="User Number"
                 value={684}
@@ -64,9 +96,8 @@ const Home = () => {
                 colors={["#275be8", "#c4e8ef",]}
               />
             </Box> */}
-          </Stack>
-        </>
-      )}
+        </Stack>
+      </>
     </Box>
   );
 };
