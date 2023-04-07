@@ -15,17 +15,14 @@ cloudinary.config({
 });
 
 const getAllHolders = async (req, res) => {
-  const { _end, _order, _start, _sort } = req.query;
+  const { _limit } = req.query;
 
   const query = {};
 
   try {
     const count = await Holder.countDocuments({ query });
 
-    const holders = await Holder.find(query)
-      .limit(_end)
-      .skip(_start)
-      .sort({ [_sort]: _order });
+    const holders = await Holder.find(query).limit(_limit);
 
     res.header("x-total-count", count);
     res.header("Access-Control-Expose-Headers", "x-total-count");
@@ -37,8 +34,8 @@ const getAllHolders = async (req, res) => {
 };
 
 const getHolderDetail = async (req, res) => {
-  const { id } = req.params;
-  const holderExists = await Holder.findOne({ _id: id });
+  const { address } = req.params;
+  const holderExists = await Holder.findOne({ wallet_address: address });
 
   if (holderExists) {
     res.status(200).json(holderExists);
@@ -66,10 +63,10 @@ const createHolder = async (req, res) => {
 
 const updateHolder = async (req, res) => {
   try {
-    const { id } = req.params;
+    const { address } = req.params;
 
-    await Holder.findByIdAndUpdate(
-      { _id: id },
+    await Holder.findOneAndUpdate(
+      { wallet_address: address },
       {
         ...req.body,
       }
@@ -83,9 +80,9 @@ const updateHolder = async (req, res) => {
 
 const deleteHolder = async (req, res) => {
   try {
-    const { id } = req.params;
+    const { address } = req.params;
 
-    const holderToDelete = await Holder.findById({ _id: id });
+    const holderToDelete = await Holder.findOne({ wallet_address: address });
 
     if (!holderToDelete) throw new Error("Holder not found");
 
@@ -130,7 +127,7 @@ const getHolderAndAsset = async (req, res) => {
 
 const getLabelAndHolder = async (req, res) => {
   const { contract_address } = req.params;
-  const { _end, _order, _start, _sort } = req.query;
+  const { _limit } = req.query;
 
   try {
     const holders = await Holder.find({
@@ -139,7 +136,7 @@ const getLabelAndHolder = async (req, res) => {
           contract_address: contract_address,
         },
       },
-    }).limit(_end).skip(_start).sort({ [_sort]: _order });
+    }).limit(_limit);
 
     if (holders) {
       // 1. get all the labels
@@ -185,9 +182,12 @@ const getLabelAndHolder = async (req, res) => {
       // 2. get the number of each label
       labels.map((label) => {
         var label12 = {
+          label: {},
           other_labels: [],
         };
-        label12[label] = getHolderNumOfLabel(label, holders);
+        var obj = {};
+        obj[label] = getHolderNumOfLabel(label, holders);
+        label12["label"] = obj;
         labels.map((label2) => {
           var obj = {};
           obj[label2] = getHolderNumOfTwoLabel(label, label2, holders);
