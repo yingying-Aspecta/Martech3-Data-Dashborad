@@ -202,6 +202,7 @@ const getLabelAndHolder = async (req, res) => {
         obj[label] = getHolderNumOfLabel(label, holders);
         label12["label"] = obj;
         labels.map((label2) => {
+          if (label2 == label) return;
           var obj = {};
           obj[label2] = getHolderNumOfTwoLabel(label, label2, holders);
           if (obj[label2] != 0) label12["other_labels"].push(obj);
