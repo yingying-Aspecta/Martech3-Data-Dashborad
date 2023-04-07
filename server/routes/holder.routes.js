@@ -8,12 +8,14 @@ import {
     deleteHolder,
 
     getHolderAndAsset,
-    getLabelAndHolder
+    getLabelAndHolder,
+    getAllHolderWalletAddress
 } from "../controllers/holder.controller.js";
 
 const router = express.Router();
 
 router.route("/").get(getAllHolders);
+router.route("/getAllHolderWalletAddress").get(getAllHolderWalletAddress);
 router.route("/:address").get(getHolderDetail);
 router.route("/getHolderAndAsset/:contract_address").get(getHolderAndAsset);
 router.route("/getLabelAndHolder/:contract_address").get(getLabelAndHolder);
