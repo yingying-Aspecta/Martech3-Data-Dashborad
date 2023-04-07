@@ -111,3 +111,7 @@ const getHolderOracleDetail = async (req, res) => {
     res.status(404).json({ message: "Holder not found" });
   }
 };
+
+export {
+    getHolderOracleDetail
+}

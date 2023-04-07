@@ -4,6 +4,7 @@ import cors from "cors";
 
 import connectDB from "./mongodb/connect.js";
 import holderRouter from "./routes/holder.routes.js";
+import oracleRouter from "./routes/oracle.routes.js";
 
 dotenv.config();
 
@@ -16,6 +17,7 @@ app.get("/", (req, res) => {
 });
 
 app.use("/api/v1/holders", holderRouter);
+app.use("/api/v1/oracles", oracleRouter);
 
 const startServer = async () => {
     try {
