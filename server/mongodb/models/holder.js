@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-const HolderSchema = new mongoose.Schema({
+const Holder = new mongoose.Schema({
   user_id: {
     type: String,
   },
@@ -119,6 +119,6 @@ const HolderSchema = new mongoose.Schema({
   },
 });
 
-const holderModel = mongoose.model("Holder", HolderSchema);
+const userProfileModel = mongoose.model("user_profile", Holder);
 
-export default holderModel;
+export default userProfileModel;
