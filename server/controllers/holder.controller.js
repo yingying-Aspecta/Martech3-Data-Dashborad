@@ -185,9 +185,12 @@ const getLabelAndHolder = async (req, res) => {
       // 2. get the number of each label
       labels.map((label) => {
         var label12 = {
+          label: {},
           other_labels: [],
         };
-        label12[label] = getHolderNumOfLabel(label, holders);
+        var obj = {};
+        obj[label] = getHolderNumOfLabel(label, holders);
+        label12["label"] = obj;
         labels.map((label2) => {
           var obj = {};
           obj[label2] = getHolderNumOfTwoLabel(label, label2, holders);
