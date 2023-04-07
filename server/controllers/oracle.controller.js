@@ -8,7 +8,7 @@ const getHolderOracleDetail = async (req, res) => {
   const { address } = req.params;
   const holder = await Holder.findOne({ wallet_address: address });
 
-  if (holderExists) {
+  if (holder) {
     // 1. get all the labels
     var labelSet = new Set();
     holder.assets.crypto_holdings.tokens.map((token) => {

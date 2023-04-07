@@ -6,6 +6,6 @@ import {
 
 const router = express.Router();
 
-router.route("/:contract_address").get(getHolderOracleDetail);
+router.route("/:address").get(getHolderOracleDetail);
 
 export default router;
