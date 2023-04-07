@@ -37,8 +37,8 @@ const getAllHolders = async (req, res) => {
 };
 
 const getHolderDetail = async (req, res) => {
-  const { id } = req.params;
-  const holderExists = await Holder.findOne({ _id: id });
+  const { address } = req.params;
+  const holderExists = await Holder.findOne({ wallet_address: address });
 
   if (holderExists) {
     res.status(200).json(holderExists);
@@ -66,10 +66,10 @@ const createHolder = async (req, res) => {
 
 const updateHolder = async (req, res) => {
   try {
-    const { id } = req.params;
+    const { address } = req.params;
 
-    await Holder.findByIdAndUpdate(
-      { _id: id },
+    await Holder.findOneAndUpdate(
+      { wallet_address: address },
       {
         ...req.body,
       }
@@ -83,9 +83,9 @@ const updateHolder = async (req, res) => {
 
 const deleteHolder = async (req, res) => {
   try {
-    const { id } = req.params;
+    const { address } = req.params;
 
-    const holderToDelete = await Holder.findById({ _id: id });
+    const holderToDelete = await Holder.findOne({ wallet_address: address });
 
     if (!holderToDelete) throw new Error("Holder not found");
 
