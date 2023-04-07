@@ -197,7 +197,7 @@ export async function fetchDataAndUpdate(): Promise<void> {
   try {
     console.log("fetchDataAndUpdate");
     const response = await axios.get(
-      "http://149.248.11.13:8080/api/v1/holders/getLabelAndHolder/0xdac17f958d2ee523a2206206994597c13d831ec7?_limit=10"
+      "http://149.248.11.13:8080/api/v1/holders/getLabelAndHolder/0xdac17f958d2ee523a2206206994597c13d831ec7?_limit=3"
     );
     const data: DataItem[] = response.data;
     console.log(data);
