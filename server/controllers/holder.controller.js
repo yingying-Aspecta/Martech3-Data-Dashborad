@@ -33,6 +33,20 @@ const getAllHolders = async (req, res) => {
   }
 };
 
+const getAllHolderWalletAddress = async (req, res) => {
+  const { _limit } = req.query;
+
+  const query = {};
+
+  try {
+    const holders = await Holder.find(query).select("wallet_address -_id").limit(_limit);
+
+    res.status(200).json(holders);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
 const getHolderDetail = async (req, res) => {
   const { address } = req.params;
   const holderExists = await Holder.findOne({ wallet_address: address });
@@ -310,4 +324,5 @@ export {
   deleteHolder,
   getHolderAndAsset,
   getLabelAndHolder,
+  getAllHolderWalletAddress
 };
