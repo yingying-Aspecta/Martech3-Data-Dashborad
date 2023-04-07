@@ -9,19 +9,6 @@ import {
 } from "components";
 
 const Home = () => {
-  const { data, isLoading, isError } = useList({
-    resource: "properties",
-    config: {
-      pagination: {
-        pageSize: 4,
-      },
-    },
-  });
-
-  const latestProperties = data?.data ?? [];
-
-  if (isLoading) return <Typography>Loading...</Typography>;
-  if (isError) return <Typography>Something went wrong!</Typography>;
 
   return (
     <Box>
