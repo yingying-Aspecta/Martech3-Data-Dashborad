@@ -195,13 +195,13 @@ export var ChartSeriesArray = names.map((name, index) => {
 
 export async function fetchDataAndUpdate(): Promise<void> {
   try {
-    console.log("fetchDataAndUpdate");
+    // console.log("fetchDataAndUpdate");
     const response = await axios.get(
       "http://149.248.11.13:8080/api/v1/holders/getLabelAndHolder/0xdac17f958d2ee523a2206206994597c13d831ec7?_limit=3"
     );
     const data: DataItem[] = response.data;
     console.log(data);
-    console.log("fetchDataAndUpdate");
+    // console.log("fetchDataAndUpdate");
     let updatedData: number[] = [];
     let updatedChartSeries: typeof ChartSeries = [];
     let updatedChartCategories: string[] = [];
@@ -215,12 +215,12 @@ export async function fetchDataAndUpdate(): Promise<void> {
     console.log("dataArrays", dataArrays);
     console.log("names", names);
 
-    console.log("updatedData", updatedData);
-    console.log("updatedChartSeries", updatedChartSeries);
-    console.log("updatedChartCategories", updatedChartCategories);
-    console.log("updatedNames", updatedNames);
-    console.log("updatedCategoriesArray", updatedCategoriesArray);
-    console.log("updatedDataArrays", updatedDataArrays);
+    // console.log("updatedData", updatedData);
+    // console.log("updatedChartSeries", updatedChartSeries);
+    // console.log("updatedChartCategories", updatedChartCategories);
+    // console.log("updatedNames", updatedNames);
+    // console.log("updatedCategoriesArray", updatedCategoriesArray);
+    // console.log("updatedDataArrays", updatedDataArrays);
 
     data.forEach((item, index) => {
       const labelKey = Object.keys(item.label)[0];
@@ -234,12 +234,12 @@ export async function fetchDataAndUpdate(): Promise<void> {
 
       // 更新 updatedNames
       updatedNames.push(labelKey);
-      console.log("updatedData", updatedData);
-      console.log("updatedChartSeries", updatedChartSeries);
-      console.log("updatedChartCategories", updatedChartCategories);
-      console.log("updatedNames", updatedNames);
-      console.log("updatedCategoriesArray", updatedCategoriesArray);
-      console.log("updatedDataArrays", updatedDataArrays);
+      //   console.log("updatedData", updatedData);
+      //   console.log("updatedChartSeries", updatedChartSeries);
+      //   console.log("updatedChartCategories", updatedChartCategories);
+      //   console.log("updatedNames", updatedNames);
+      //   console.log("updatedCategoriesArray", updatedCategoriesArray);
+      //   console.log("updatedDataArrays", updatedDataArrays);
       // 更新 updatedCategoriesArray 和 updatedDataArrays
 
       if (!updatedCategoriesArray[index]) {
@@ -256,12 +256,12 @@ export async function fetchDataAndUpdate(): Promise<void> {
         updatedCategoriesArray[index][i] = otherLabelKey;
         updatedDataArrays[index][i] = otherLabelValue;
       });
-      console.log("updatedData", updatedData);
-      console.log("updatedChartSeries", updatedChartSeries);
-      console.log("updatedChartCategories", updatedChartCategories);
-      console.log("updatedNames", updatedNames);
-      console.log("updatedCategoriesArray", updatedCategoriesArray);
-      console.log("updatedDataArrays", updatedDataArrays);
+      //   console.log("updatedData", updatedData);
+      //   console.log("updatedChartSeries", updatedChartSeries);
+      //   console.log("updatedChartCategories", updatedChartCategories);
+      //   console.log("updatedNames", updatedNames);
+      //   console.log("updatedCategoriesArray", updatedCategoriesArray);
+      //   console.log("updatedDataArrays", updatedDataArrays);
     });
 
     updatedChartSeries.push({

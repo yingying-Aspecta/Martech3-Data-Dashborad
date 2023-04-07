@@ -25,7 +25,7 @@ const TotalRevenue: React.FC = () => {
     console.log("Clicked bar index:", clickedDataPointIndex);
     setClickedDataPointIndex(clickedDataPointIndex);
     // console.log("Clicked bar index:", clickedDataPointIndex);
-    fetchDataAndUpdate();
+
     if (clickedDataPointIndex !== -1) {
       setShowAnotherChart(true);
     }
