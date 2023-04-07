@@ -1,10 +1,14 @@
 [
   {
-    "apple": 10,
+    "label": { "apple": 5 },
     "other_labels": [{ "orange": 5 }, { "banana": 8 }]
   },
   {
-    "apple": 10,
-    "other_labels": [{ "orange": 5 }, { "banana": 8 }]
+    "label": { "orange": 5 },
+    "other_labels": [{ "apple": 5 }, { "banana": 8 }]
+  },
+  {
+    "label": { "banana": 8 },
+    "other_labels": [{ "apple": 5 }, { "orange": 5 }]
   }
 ]

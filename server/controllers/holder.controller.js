@@ -15,17 +15,14 @@ cloudinary.config({
 });
 
 const getAllHolders = async (req, res) => {
-  const { _end, _order, _start, _sort } = req.query;
+  const { _limit } = req.query;
 
   const query = {};
 
   try {
     const count = await Holder.countDocuments({ query });
 
-    const holders = await Holder.find(query)
-      .limit(_end)
-      .skip(_start)
-      .sort({ [_sort]: _order });
+    const holders = await Holder.find(query).limit(_limit);
 
     res.header("x-total-count", count);
     res.header("Access-Control-Expose-Headers", "x-total-count");
@@ -36,9 +33,23 @@ const getAllHolders = async (req, res) => {
   }
 };
 
+const getAllHolderWalletAddress = async (req, res) => {
+  const { _limit } = req.query;
+
+  const query = {};
+
+  try {
+    const holders = await Holder.find(query).select("wallet_address -_id").limit(_limit);
+
+    res.status(200).json(holders);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
 const getHolderDetail = async (req, res) => {
-  const { id } = req.params;
-  const holderExists = await Holder.findOne({ _id: id });
+  const { address } = req.params;
+  const holderExists = await Holder.findOne({ wallet_address: address });
 
   if (holderExists) {
     res.status(200).json(holderExists);
@@ -66,10 +77,10 @@ const createHolder = async (req, res) => {
 
 const updateHolder = async (req, res) => {
   try {
-    const { id } = req.params;
+    const { address } = req.params;
 
-    await Holder.findByIdAndUpdate(
-      { _id: id },
+    await Holder.findOneAndUpdate(
+      { wallet_address: address },
       {
         ...req.body,
       }
@@ -83,9 +94,9 @@ const updateHolder = async (req, res) => {
 
 const deleteHolder = async (req, res) => {
   try {
-    const { id } = req.params;
+    const { address } = req.params;
 
-    const holderToDelete = await Holder.findById({ _id: id });
+    const holderToDelete = await Holder.findOne({ wallet_address: address });
 
     if (!holderToDelete) throw new Error("Holder not found");
 
@@ -114,7 +125,6 @@ const getHolderAndAsset = async (req, res) => {
     params.append("contractaddress", contract_address);
     params.append("page", 1);
     params.append("offset", 100);
-    console.log(params.toString());
     axios
       .get("https://blockscout.scroll.io/api?" + params.toString())
       .then((response) => {
@@ -130,7 +140,7 @@ const getHolderAndAsset = async (req, res) => {
 
 const getLabelAndHolder = async (req, res) => {
   const { contract_address } = req.params;
-  const { _end, _order, _start, _sort } = req.query;
+  const { _limit } = req.query;
 
   try {
     const holders = await Holder.find({
@@ -139,7 +149,7 @@ const getLabelAndHolder = async (req, res) => {
           contract_address: contract_address,
         },
       },
-    }).limit(_end).skip(_start).sort({ [_sort]: _order });
+    }).limit(_limit);
 
     if (holders) {
       // 1. get all the labels
@@ -164,7 +174,7 @@ const getLabelAndHolder = async (req, res) => {
           labelSet.add(label);
         });
         holder.social.social_activities.map((activity) => {
-          for (let label of activity.label) {
+          for (let label of activity.labels) {
             labelSet.add(label);
           }
         });
@@ -185,9 +195,12 @@ const getLabelAndHolder = async (req, res) => {
       // 2. get the number of each label
       labels.map((label) => {
         var label12 = {
+          label: {},
           other_labels: [],
         };
-        label12[label] = getHolderNumOfLabel(label, holders);
+        var obj = {};
+        obj[label] = getHolderNumOfLabel(label, holders);
+        label12["label"] = obj;
         labels.map((label2) => {
           var obj = {};
           obj[label2] = getHolderNumOfTwoLabel(label, label2, holders);
@@ -229,7 +242,7 @@ function getHolderNumOfLabel(label, holders) {
       count += 1;
     }
     holder.social.social_activities.map((activity) => {
-      if (activity.label.includes(label)) {
+      if (activity.labels.includes(label)) {
         count += 1;
       }
     });
@@ -279,7 +292,7 @@ function getHolderNumOfTwoLabel(label1, label2, holders) {
       count += 1;
     }
     holder.social.social_activities.map((activity) => {
-      if (activity.label.includes(label1) && activity.label.includes(label2)) {
+      if (activity.labels.includes(label1) && activity.labels.includes(label2)) {
         count += 1;
       }
     });
@@ -311,4 +324,5 @@ export {
   deleteHolder,
   getHolderAndAsset,
   getLabelAndHolder,
+  getAllHolderWalletAddress
 };

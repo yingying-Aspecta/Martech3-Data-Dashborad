@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import { Box, Typography, Stack } from "@mui/material";
 import { ArrowCircleUpRounded } from "@mui/icons-material";
 import { Button } from "@mui/material";
+import { fetchDataAndUpdate } from "./chart.config";
 
 import Chart from "react-apexcharts";
 import {
@@ -10,8 +11,15 @@ import {
   ChartSeriesArray,
   ChartSeries,
   ChartOptions,
+  DataArrays,
 } from "./chart.config"; // 从chartConfig.ts中导入配置和数据
 
+var C = [
+  {
+    name: "Last Month",
+    data: [183, 124, 115, 85, 143, 143, 96],
+  },
+];
 const TotalRevenue: React.FC = () => {
   const [showAnotherChart, setShowAnotherChart] = useState(false);
   const [clickedDataPointIndex, setClickedDataPointIndex] = useState<
@@ -20,10 +28,11 @@ const TotalRevenue: React.FC = () => {
 
   const handleClick = (event: any, chartContext: any, config: any) => {
     // console.log(chartContext, config);
-
     const clickedDataPointIndex = config.dataPointIndex;
     console.log("Clicked bar index:", clickedDataPointIndex);
     setClickedDataPointIndex(clickedDataPointIndex);
+    // console.log("Clicked bar index:", clickedDataPointIndex);
+    // fetchDataAndUpdate();
     if (clickedDataPointIndex !== -1) {
       setShowAnotherChart(true);
     }
@@ -76,7 +85,11 @@ const TotalRevenue: React.FC = () => {
         </>
       )}
       {showAnotherChart &&
-        [0, 1, 2, 3, 4, 5, 6].map((index) => {
+        clickedDataPointIndex !== null &&
+        Array.from(
+          { length: DataArrays[clickedDataPointIndex].length },
+          (_, index) => index
+        ).map((index) => {
           if (clickedDataPointIndex === index) {
             return (
               <>
@@ -133,7 +146,7 @@ const TotalRevenue: React.FC = () => {
                 <Chart
                   key={index}
                   options={ChartOptionsArray[index]}
-                  series={ChartSeriesArray[index]}
+                  series={[ChartSeriesArray[index]]}
                   type="bar"
                   height={550}
                 />
