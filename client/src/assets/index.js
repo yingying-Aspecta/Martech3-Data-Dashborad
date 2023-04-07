@@ -1,4 +1,4 @@
 import logo from "./logo.svg";
-import yariga from "./yariga.svg";
+import martech3_logo from "./martech3_logo.png";
 
-export { logo, yariga };
+export { logo, martech3_logo };

@@ -2,7 +2,7 @@ import { useEffect, useRef } from "react";
 import { useLogin } from "@refinedev/core";
 import { Container, Box } from "@mui/material";
 
-import { yariga } from "../assets";
+import { martech3_logo } from "../assets";
 
 import { CredentialResponse } from "../interfaces/google";
 
@@ -67,7 +67,7 @@ export const Login: React.FC = () => {
                     }}
                 >
                     <div>
-                        <img src={yariga} alt="Yariga Logo" />
+                        <img src={martech3_logo} alt="martech3_logo Logo" />
                     </div>
                     {/* <Box mt={4}>
                         <GoogleButton />

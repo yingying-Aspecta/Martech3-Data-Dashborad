@@ -1,6 +1,7 @@
 import React from "react";
 import { useGetIdentity } from "@refinedev/core";
 import { AppBar, Avatar, Stack, Toolbar, Typography } from "@mui/material";
+import { ConnectWallet } from "@thirdweb-dev/react";
 
 export const Header: React.FC = () => {
     const { data: user } = useGetIdentity({
@@ -15,6 +16,7 @@ export const Header: React.FC = () => {
             elevation={0}
             sx={{ background: "#fcfcf" }}
         >
+            
             <Toolbar>
                 <Stack
                     direction="row"
@@ -35,6 +37,7 @@ export const Header: React.FC = () => {
                         </Stack>
                     )}
                 </Stack>
+                <ConnectWallet />
             </Toolbar>
         </AppBar>
     );
