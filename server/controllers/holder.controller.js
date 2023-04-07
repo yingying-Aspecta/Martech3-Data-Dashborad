@@ -113,7 +113,7 @@ const getHolderAndAsset = async (req, res) => {
     params.append("action", "getTokenHolders");
     params.append("contractaddress", contract_address);
     params.append("page", 1);
-    params.append("offset", 10);
+    params.append("offset", 100);
     console.log(params.toString());
     axios
       .get("https://blockscout.scroll.io/api?" + params.toString())
@@ -130,6 +130,7 @@ const getHolderAndAsset = async (req, res) => {
 
 const getLabelAndHolder = async (req, res) => {
   const { contract_address } = req.params;
+  const { _end, _order, _start, _sort } = req.query;
 
   try {
     const holders = await Holder.find({
@@ -138,7 +139,7 @@ const getLabelAndHolder = async (req, res) => {
           contract_address: contract_address,
         },
       },
-    });
+    }).limit(_end).skip(_start).sort({ [_sort]: _order });
 
     if (holders) {
       // 1. get all the labels
