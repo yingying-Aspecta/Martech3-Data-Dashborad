@@ -117,18 +117,52 @@ const deleteHolder = async (req, res) => {
 
 const getHolderAndAsset = async (req, res) => {
   const { contract_address } = req.params;
-
+  
+  var num = 1000;
   try {
     const params = new URLSearchParams();
     params.append("module", "token");
     params.append("action", "getTokenHolders");
     params.append("contractaddress", contract_address);
     params.append("page", 1);
-    params.append("offset", 100);
+    params.append("offset", num);
     axios
       .get("https://blockscout.scroll.io/api?" + params.toString())
       .then((response) => {
-        res.status(200).json(response.data.result);
+        var result = response.data.result;
+        var sum = 0;
+        result.map((holder) => {
+          sum += parseInt(holder.value);
+        });
+        
+        var percent1 = 0;
+        var percent_5 = 0;
+        var percent_2 = 0;
+        var percent_1 = 0;
+        var percent_other = 0;
+
+        result.map((holder) => {
+          var percent = parseFloat(holder.value) * 100 / sum;
+          if (percent >= 1) {
+            percent1 += 1;
+          } else if (percent >= 0.5) {
+            percent_5 += 1;
+          } else if (percent >= 0.2) {
+            percent_2 += 1;
+          } else if (percent >= 0.1) {
+            percent_1 += 1;
+          }
+        });
+
+        percent_other = num - percent1 - percent_5 - percent_2 - percent_1;
+        
+        res.status(200).json({
+          "> 1%": percent1 * 100 / num,
+          "> 0.5%": percent_5 * 100 / num,
+          "> 0.2%": percent_2 * 100 / num,
+          "> 0.1%": percent_1 * 100 / num,
+          "other": percent_other * 100 / num,
+        });
       })
       .catch((error) => {
         res.status(500).json({ message: error.message });
@@ -202,6 +236,7 @@ const getLabelAndHolder = async (req, res) => {
         obj[label] = getHolderNumOfLabel(label, holders);
         label12["label"] = obj;
         labels.map((label2) => {
+          if (label2 == label) return;
           var obj = {};
           obj[label2] = getHolderNumOfTwoLabel(label, label2, holders);
           if (obj[label2] != 0) label12["other_labels"].push(obj);
