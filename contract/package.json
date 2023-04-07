@@ -1,0 +1,6 @@
+{
+	"dependencies": {
+		"@openzeppelin/contracts": "^4.8.2",
+		"@redstone-finance/evm-connector": "^0.0.22"
+	}
+}
