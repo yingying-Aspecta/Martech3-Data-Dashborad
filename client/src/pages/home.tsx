@@ -1,5 +1,5 @@
 import { useList } from "@refinedev/core";
-import { Typography, Box, Stack, TextField } from "@mui/material";
+import { Typography, Box, Stack, TextField, Button } from "@mui/material";
 import React, { useState, useEffect } from "react";
 import { useForm } from "@refinedev/react-hook-form";
 import {
@@ -8,12 +8,25 @@ import {
   TotalRevenue,
   PropertyCard,
 } from "components";
+import axios from "axios";
 interface ChartData {
   ChartSeries: ChartSeriesItem[];
   ChartCategories: string[];
   CategoriesArray: string[][];
   DataArrays: number[][];
   ChartSeriesArray: ChartSeriesItem[];
+}
+export interface DataItem {
+  data: {
+    "> 1%": number;
+    "> 0.5%": number;
+    "> 0.2%": number;
+    "> 0.1%": number;
+    ">0.05%": number;
+    other: number;
+  };
+  index: number;
+  name: string;
 }
 
 interface ChartSeriesItem {
@@ -24,10 +37,10 @@ interface ChartSeriesItem {
 import { fetchData } from "components/charts/chart.config";
 
 // 创建一个异步函数，从后端获取数据并返回
-async function fetchChartData(): Promise<ChartData> {
+async function fetchChartData(s: string): Promise<ChartData> {
   // 在这里实现从后端获取数据的逻辑
   // 假设您已经从后端获取了数据并将其存储在变量 `response` 中
-  const response = await fetchData();
+  const response = await fetchData(s);
 
   // 返回所需的数据结构
   return {
@@ -37,6 +50,20 @@ async function fetchChartData(): Promise<ChartData> {
     DataArrays: response.DataArrays,
     ChartSeriesArray: response.ChartSeriesArray,
   };
+}
+async function fetchProgressData(s: string): Promise<DataItem> {
+  try {
+    console.log("hello");
+    const response = await axios.get(
+      "http://149.248.11.13:8080/api/v1/holders/getHolderAndAsset/" + s
+    );
+    const _data: DataItem = response.data;
+    console.log("data:", _data);
+    return _data;
+  } catch (error) {
+    console.error(s, "\nError fetching data:", error);
+    throw error;
+  }
 }
 
 const Home = () => {
@@ -51,7 +78,8 @@ const Home = () => {
   const [loading, setLoading] = React.useState(false);
   //   const [userAddress, setUserAddress] = React.useState("");
   //   const [successAddress, setSuccessAddress] = React.useState("");
-  const [contractAddress, setContractAddress] = React.useState("");
+  //   const [contractAddress, setContractAddress] = React.useState("");
+  var contractAddress = "";
   //   const [dataFeedsArray, setDataFeedsArray] = React.useState(Object);
   const {
     saveButtonProps,
@@ -61,15 +89,73 @@ const Home = () => {
     formState: { errors },
   } = useForm();
   // 获取数据并更新状态
+  const [ProgressBarProps, setProgressBarProps] = useState<DataItem>({
+    data: {
+      "> 1%": 0,
+      "> 0.5%": 0,
+      "> 0.2%": 0,
+      "> 0.1%": 0,
+      ">0.05%": 0,
+      other: 0,
+    },
+    index: 0,
+    name: "",
+  });
 
-  useEffect(() => {
+  function update() {
+    contractAddress = inputString;
+    console.log(contractAddress);
     const fetchDataAndUpdate = async () => {
-      const _data = await fetchChartData();
-      setChartData(_data);
+      const _data = await fetchChartData(
+        "http://149.248.11.13:8080/api/v1/holders/getLabelAndHolder/" +
+          contractAddress
+      );
+      console.log("data:", _data);
+      return _data;
     };
 
-    fetchDataAndUpdate();
-  }, []);
+    const fetchProgressBarPropsData = async () => {
+      console.log("contractAddress:", contractAddress);
+      const _data = await fetchProgressData(contractAddress);
+      console.log("data:", _data);
+      // setProgressBarProps(_data);
+      console.log("setProgress:", ProgressBarProps);
+      return _data;
+    };
+
+    fetchDataAndUpdate().then((data1) => {
+      fetchProgressBarPropsData().then((data2) => {
+        setChartData(data1);
+        setProgressBarProps(data2);
+      });
+    });
+  }
+
+  //   useEffect(() => {
+  //     const fetchDataAndUpdate = async () => {
+  //       const _data = await fetchChartData(
+  //         "http://149.248.11.13:8080/api/v1/holders/getLabelAndHolder/" +
+  //           contractAddress
+  //       );
+  //       console.log("data:", _data);
+  //       setChartData(_data);
+  //     };
+
+  //     fetchDataAndUpdate();
+
+  //     const fetchProgressBarPropsData = async () => {
+  //       try {
+  //         console.log("contractAddress:", contractAddress);
+  //         const _data = await fetchProgressData(contractAddress);
+  //         console.log("data:", _data);
+  //         setProgressBarProps(_data);
+  //         console.log("setProgress:", ProgressBarProps);
+  //       } catch (error) {
+  //         console.error("从后端获取数据时出错:", error);
+  //       }
+  //     };
+  //     fetchProgressBarPropsData();
+  //   }, [contractAddress]);
 
   const { data, isLoading, isError } = useList({
     resource: "properties",
@@ -81,11 +167,8 @@ const Home = () => {
   });
 
   const latestProperties = data?.data ?? [];
+  var inputString = "";
 
-  // if (isLoading) return <Typography>Loading...</Typography>;
-  //   if (isError) return <Typography>Something went wrong!</Typography>;
-
-  //   if (loading) fetchDataAndUpdate();
   return (
     <Box>
       <>
@@ -107,16 +190,21 @@ const Home = () => {
             fullWidth
             InputLabelProps={{ shrink: true }}
             type="text"
-            label="User Address"
+            label="Contract Address"
             name="user"
             onChange={async (e) => {
-              setContractAddress(e.target.value);
+              inputString = e.target.value;
             }}
             disabled={loading}
           />
-          {/* <Button>
-                      
-          </Button> */}
+          <Button
+            onClick={() => {
+              update();
+            }}
+            disabled={loading}
+          >
+            submit
+          </Button>
         </Box>
         <Stack
           mt="25px"
@@ -125,7 +213,7 @@ const Home = () => {
           gap={4}
         >
           <TotalRevenue chartData={chartData} />
-          <PropertyReferrals />
+          <PropertyReferrals dataItem={ProgressBarProps} />
           {/* <Box mt="20px" width="300px" display="flex" flexWrap="wrap" gap={4}>
               <PieChart
                 title="User Number"

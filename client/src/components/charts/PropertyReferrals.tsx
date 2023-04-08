@@ -4,12 +4,31 @@ import { propertyReferralsInfo } from "constants/index";
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { PieChart } from "components";
+import { DataItem } from "pages/home";
 interface ProgressBarProps {
   title: string;
   percentage: number;
   color: string;
 }
-
+function getColor(title: string): string {
+  // 根据 title 为不同的进度条分配颜色
+  switch (title) {
+    case "> 1%":
+      return "#F45252";
+    case "> 0.5%":
+      return "#FFA2C0";
+    case "> 0.2%":
+      return "#FFCE73";
+    case "> 0.1%":
+      return "#EEB51A";
+    case "> 0.05%":
+      return "#F9CD4C";
+    case "other":
+      return "#FF8C00";
+    default:
+      return "gray";
+  }
+}
 const ProgressBar = ({ title, percentage, color }: ProgressBarProps) => (
   <Box width="100%">
     <Stack direction="row" alignItems="center" justifyContent="space-between">
@@ -38,82 +57,20 @@ const ProgressBar = ({ title, percentage, color }: ProgressBarProps) => (
     </Box>
   </Box>
 );
-interface ProgressData {
-  title: string;
-  percentage: number;
-  color: string;
-}
-interface DataItem {
-  data: {
-    "> 1%": number;
-    "> 0.5%": number;
-    "> 0.2%": number;
-    "> 0.1%": number;
-    ">0.05%": number;
-    other: number;
-  };
-  index: number;
-  name: string;
+interface PropertyReferralsProps {
+  dataItem: DataItem;
 }
 
-async function fetchProgressData(): Promise<DataItem> {
-  try {
-    const response = await axios.get(
-      "http://149.248.11.13:8080/api/v1/holders/getHolderAndAsset/0x09ffd4248f735965795bb36df9754ec58e872caa"
-    );
-    const _data: DataItem = response.data;
-    return _data;
-  } catch (error) {
-    console.error("Error fetching data:", error);
-    throw error;
+const PropertyReferrals: React.FC<PropertyReferralsProps> = ({ dataItem }) => {
+  if (!dataItem) {
+    console.error("dataItem is undefined!");
+    return null; // 或者返回一个表示错误状态的组件
   }
-}
-function getColor(title: string): string {
-  // 根据 title 为不同的进度条分配颜色
-  switch (title) {
-    case "> 1%":
-      return "#F45252";
-    case "> 0.5%":
-      return "#FFA2C0";
-    case "> 0.2%":
-      return "#FFCE73";
-    case "> 0.1%":
-      return "#EEB51A";
-    case "> 0.05%":
-      return "#F9CD4C";
-    case "other":
-      return "#FF8C00";
-    default:
-      return "gray";
-  }
-}
 
-const PropertyReferrals: React.FC = () => {
-  const [ProgressBarProps, setProgressBarProps] = useState<DataItem>({
-    data: {
-      "> 1%": 0,
-      "> 0.5%": 0,
-      "> 0.2%": 0,
-      "> 0.1%": 0,
-      ">0.05%": 0,
-      other: 0,
-    },
-    index: 0,
-    name: "",
-  });
-
-  const fetchProgressBarPropsData = async () => {
-    try {
-      const _data = await fetchProgressData();
-      setProgressBarProps(_data);
-    } catch (error) {
-      console.error("从后端获取数据时出错:", error);
-    }
-  };
-
-  useEffect(() => {
-    fetchProgressBarPropsData();
-  }, []);
+  console.log("property dataitem:", dataItem);
+  var data = dataItem.data;
+  var index = dataItem.index;
+  var name = dataItem.name;
   return (
     <Box
       p={4}
@@ -129,7 +86,7 @@ const PropertyReferrals: React.FC = () => {
       </Typography>
 
       <Stack my="20px" direction="column" gap={4}>
-        {Object.entries(ProgressBarProps.data).map(([title, percentage]) => (
+        {Object.entries(data).map(([title, percentage]) => (
           <ProgressBar
             key={title}
             title={title}
@@ -139,9 +96,9 @@ const PropertyReferrals: React.FC = () => {
         ))}
       </Stack>
       <PieChart
-        title={"Decentralized Index for " + ProgressBarProps.name}
-        value={`${ProgressBarProps.index}%`}
-        series={Object.values(ProgressBarProps.data)}
+        title={"Decentralized Index for " + name}
+        value={`${index}%`}
+        series={Object.values(data)}
         colors={[
           "#F45252",
           "#FFA2C0",

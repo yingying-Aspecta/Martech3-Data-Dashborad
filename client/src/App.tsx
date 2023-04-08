@@ -40,13 +40,7 @@ const colors = {
 import {
   // Login,
   Home,
-  Agents,
   MyProfile,
-  PropertyDetails,
-  AllProperties,
-  CreateProperty,
-  AgentProfile,
-  EditProperty,
 } from "pages";
 
 const axiosInstance = axios.create();

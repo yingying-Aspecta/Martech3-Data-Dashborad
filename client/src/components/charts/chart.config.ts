@@ -184,11 +184,9 @@ interface ChartSeriesItem {
   data: number[];
 }
 
-export async function fetchData(): Promise<ResponseData> {
+export async function fetchData(s: string): Promise<ResponseData> {
   try {
-    const response = await axios.get(
-      "http://149.248.11.13:8080/api/v1/holders/getLabelAndHolder/0xdac17f958d2ee523a2206206994597c13d831ec7?_limit=10"
-    );
+    const response = await axios.get(s);
     const data: DataItem[] = response.data;
 
     let updatedData: number[] = [];
