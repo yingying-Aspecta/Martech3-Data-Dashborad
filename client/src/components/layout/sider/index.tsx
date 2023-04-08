@@ -239,9 +239,9 @@ export const Sider: typeof DefaultSider = ({ render }) => {
             py: 1,
             "&.Mui-selected": {
               "&:hover": {
-                backgroundColor: "transparent",
+                backgroundColor: "#FF9F00",
               },
-              backgroundColor: "transparent",
+              backgroundColor: "#FF8C00",
             },
             justifyContent: "center",
           }}
