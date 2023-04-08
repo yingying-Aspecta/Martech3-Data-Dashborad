@@ -402,7 +402,7 @@ const MyProfile = () => {
         </Box>
       </Create>
       <List
-        title={<Typography variant="h5">{`${successAddress === '' ? 'Your' : successAddress}'s Data Mapping on Scroll`}</Typography>}
+        title={<Typography variant="h5">{`${successAddress === '' ? 'Sample' : successAddress}'s Data Mapping on Scroll`}</Typography>}
       >
         <Box sx={{ marginBottom: 3 }}>{`Contract Address:${contractAddress === '' ? 'None' : contractAddress}`}</Box>
         <TableContainer component={Paper}>
