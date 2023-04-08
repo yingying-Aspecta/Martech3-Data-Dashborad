@@ -348,6 +348,8 @@ const callContract = async (inputContract, dataFeedsArray) => {
 
     const contractAddress = inputContract;
 
+    console.log(inputContract, '-========-3')
+
     // console.log(provider.getSigner('0xdBcC2C6c892C8d3e3Fe4D325fEc810B7376A5Ed6')._isSigner)
     // 创建合约实例
     const contract = new ethers.Contract(contractAddress, contractABI, provider);
@@ -367,6 +369,7 @@ const callContract = async (inputContract, dataFeedsArray) => {
         nft_attitude_oracle_value = await wrappedContract.get_nft_attitude_oracle_value();
         nft_attitude_oracle_value = nft_attitude_oracle_value.toNumber()
     } catch (error) {
+        console.log(error);
         nft_attitude_oracle_value = 0;
     }
 
@@ -382,6 +385,7 @@ const callContract = async (inputContract, dataFeedsArray) => {
         token_attitude_oracle_value = await wrappedContract.get_token_attitude_oracle_value();
         token_attitude_oracle_value = token_attitude_oracle_value.toNumber()
     } catch (error) {
+        console.log(error);
         token_attitude_oracle_value = 0;
     }
 
@@ -398,6 +402,7 @@ const callContract = async (inputContract, dataFeedsArray) => {
         recent_active_trader_type_oracle_value = await wrappedContract.get_recent_active_trader_type_oracle_value();
         recent_active_trader_type_oracle_value = recent_active_trader_type_oracle_value.toNumber()
     } catch (error) {
+        console.log(error);
         recent_active_trader_type_oracle_value = 0;
     }
 
@@ -413,6 +418,7 @@ const callContract = async (inputContract, dataFeedsArray) => {
         active_trader_type_oracle_value = await wrappedContract.get_active_trader_type_oracle_value();
         active_trader_type_oracle_value = active_trader_type_oracle_value.toNumber()
     } catch (error) {
+        console.log(error);
         active_trader_type_oracle_value = 0;
     }
 
@@ -428,6 +434,7 @@ const callContract = async (inputContract, dataFeedsArray) => {
         whale_type_oracle_value = await wrappedContract.get_whale_type_oracle_value();
         whale_type_oracle_value = whale_type_oracle_value.toNumber()
     } catch (error) {
+        console.log(error);
         whale_type_oracle_value = 0;
     }
 
@@ -443,6 +450,7 @@ const callContract = async (inputContract, dataFeedsArray) => {
         dealer_oracle_value = await wrappedContract.get_dealer_oracle_value();
         dealer_oracle_value = dealer_oracle_value.toNumber()
     } catch (error) {
+        console.log(error);
         dealer_oracle_value = 0;
     }
 
@@ -459,6 +467,7 @@ const callContract = async (inputContract, dataFeedsArray) => {
         higher_risk_appetite_oracle_value = await wrappedContract.get_higher_risk_appetite_oracle_value();
         higher_risk_appetite_oracle_value = higher_risk_appetite_oracle_value.toNumber()
     } catch (error) {
+        console.log(error);
         higher_risk_appetite_oracle_value = 0;
     }
     // console.log(valueFromOracle)
