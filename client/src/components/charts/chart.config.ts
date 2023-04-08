@@ -3,11 +3,6 @@ import Chart from "react-apexcharts";
 import { ApexOptions } from "apexcharts";
 import axios from "axios";
 
-interface DataItem {
-  label: { [key: string]: number };
-  other_labels: Array<{ [key: string]: number }>;
-}
-
 interface ChartSeriesItem {
   name: string;
   data: number[];
@@ -19,33 +14,10 @@ export interface ChartData {
   ChartSeries: ChartSeriesItem; //一级，name是一级选中的label，data是一级的数据
   ChartCategories: string[]; //一级，一级的label
 }
-// export var ChartSeries = [
-//   {
-//     name: "Last Month",
-//     data: [183, 124, 115, 85, 143, 143, 96],
-//   },
-// ];
-
-// export var categoriesArray = [
-//   ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul"],
-//   ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul"],
-//   ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul"],
-//   ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul"],
-//   ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul"],
-//   ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul"],
-//   ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul"],
-// ];
-// export var names = [
-//   "Last Month",
-//   "Last Month",
-//   "This Month",
-//   "This Month",
-//   "This Month",
-//   "This Month",
-//   "This Month",
-//   "This Month",
-// ];
-export var Chartcategories = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul"];
+interface DataItem {
+  label: { [key: string]: number };
+  other_labels: Array<{ [key: string]: number }>;
+}
 
 let Data: number[] = [];
 let ChartSeries = [{ name: "", data: Data }];
@@ -54,18 +26,6 @@ let CategoriesArray: string[][] = [];
 let DataArrays: number[][] = [];
 
 export { ChartSeries, ChartCategories, CategoriesArray, DataArrays };
-
-// export var dataArrays = [];
-// export var dataArrays = [
-//   [183, 124, 115, 85, 143, 143, 10],
-//   [183, 124, 115, 85, 143, 143, 20],
-//   [150, 180, 100, 90, 120, 170, 30],
-//   [150, 180, 100, 90, 120, 170, 40],
-//   [150, 180, 100, 90, 120, 170, 50],
-//   [150, 180, 100, 90, 120, 170, 60],
-//   [150, 180, 100, 90, 120, 170, 70],
-//   [150, 180, 100, 90, 120, 170, 80],
-// ];
 
 export const ChartOptions: ApexOptions = {
   chart: {
@@ -79,7 +39,7 @@ export const ChartOptions: ApexOptions = {
       },
     },
   },
-  colors: ["#475BE8"],
+  colors: ["#FF8C00"],
   plotOptions: {
     bar: {
       borderRadius: 4,
@@ -99,6 +59,11 @@ export const ChartOptions: ApexOptions = {
   },
   xaxis: {
     categories: ChartCategories,
+    labels: {
+      style: {
+        colors: ["#FFFFFF"], // 将颜色设置为白色
+      },
+    },
   },
   yaxis: {
     title: {
@@ -140,7 +105,7 @@ export const ChartOptionsArray: ApexOptions[] = CategoriesArray.map(
           show: false,
         },
       },
-      colors: ["#475BE8"],
+      colors: ["#FF8C00"],
       plotOptions: {
         bar: {
           borderRadius: 4,
@@ -160,6 +125,11 @@ export const ChartOptionsArray: ApexOptions[] = CategoriesArray.map(
       },
       xaxis: {
         categories: categories, // 使用不同的横坐标
+        labels: {
+          style: {
+            colors: ["#FFFFFF"], // 将颜色设置为白色
+          },
+        },
       },
       yaxis: {
         title: {
@@ -217,7 +187,7 @@ interface ChartSeriesItem {
 export async function fetchData(): Promise<ResponseData> {
   try {
     const response = await axios.get(
-      "http://149.248.11.13:8080/api/v1/holders/getLabelAndHolder/0xdac17f958d2ee523a2206206994597c13d831ec7?_limit=3"
+      "http://149.248.11.13:8080/api/v1/holders/getLabelAndHolder/0xdac17f958d2ee523a2206206994597c13d831ec7?_limit=10"
     );
     const data: DataItem[] = response.data;
 
@@ -276,105 +246,10 @@ export async function fetchData(): Promise<ResponseData> {
       ChartSeriesArray: updatedChartSeriesArray,
     };
 
+    console.log("responseData", responseData);
     return responseData;
   } catch (error) {
     console.error("Error fetching data:", error);
     throw error;
   }
 }
-
-// export async function fetchData(): Promise<void> {
-//   try {
-//     // console.log("fetchDataAndUpdate");
-//     const response = await axios.get(
-//       "http://149.248.11.13:8080/api/v1/holders/getLabelAndHolder/0xdac17f958d2ee523a2206206994597c13d831ec7?_limit=3"
-//     );
-//     const data: DataItem[] = response.data;
-//     // console.log(data);
-//     // console.log("fetchDataAndUpdate");
-//     let updatedData: number[] = [];
-//     let updatedChartSeries: typeof ChartSeries = [];
-//     let updatedChartCategories: string[] = [];
-//     let updatedCategoriesArray: string[][] = [];
-//     let updatedDataArrays: number[][] = [];
-//     let updatedChartSeriesArray: typeof ChartSeriesArray = [];
-
-//     console.log("ChartSeries", ChartSeries);
-//     console.log("ChartCategories", ChartCategories);
-//     console.log("CategoriesArray", CategoriesArray);
-//     console.log("DataArrays", DataArrays);
-
-//     // console.log("updatedData", updatedData);
-//     // console.log("updatedChartSeries", updatedChartSeries);
-//     // console.log("updatedChartCategories", updatedChartCategories);
-//     // console.log("updatedNames", updatedNames);
-//     // console.log("updatedCategoriesArray", updatedCategoriesArray);
-//     // console.log("updatedDataArrays", updatedDataArrays);
-
-//     data.forEach((item, index) => {
-//       const labelKey = Object.keys(item.label)[0];
-//       const labelValue = item.label[labelKey];
-
-//       // 更新 updatedChartSeries
-//       updatedData.push(labelValue);
-
-//       // 更新 updatedChartCategories
-//       updatedChartCategories.push(labelKey);
-
-//       //   console.log("updatedData", updatedData);
-//       //   console.log("updatedChartSeries", updatedChartSeries);
-//       //   console.log("updatedChartCategories", updatedChartCategories);
-//       //   console.log("updatedNames", updatedNames);
-//       //   console.log("updatedCategoriesArray", updatedCategoriesArray);
-//       //   console.log("updatedDataArrays", updatedDataArrays);
-//       // 更新 updatedCategoriesArray 和 updatedDataArrays
-
-//       if (!updatedCategoriesArray[index]) {
-//         updatedCategoriesArray[index] = [];
-//       }
-//       if (!updatedDataArrays[index]) {
-//         updatedDataArrays[index] = [];
-//       }
-
-//       item.other_labels.forEach((otherLabel, i) => {
-//         const otherLabelKey = Object.keys(otherLabel)[0];
-//         const otherLabelValue = otherLabel[otherLabelKey];
-
-//         updatedCategoriesArray[index][i] = otherLabelKey;
-//         updatedDataArrays[index][i] = otherLabelValue;
-//       });
-
-//       //   console.log("updatedData", updatedData);
-//       //   console.log("updatedChartSeries", updatedChartSeries);
-//       //   console.log("updatedChartCategories", updatedChartCategories);
-//       //   console.log("updatedNames", updatedNames);
-//       //   console.log("updatedCategoriesArray", updatedCategoriesArray);
-//       //   console.log("updatedDataArrays", updatedDataArrays);
-//     });
-
-//     updatedChartSeries.push({
-//       name: "Whole number",
-//       data: updatedData,
-//     });
-//     updatedChartSeriesArray = updatedChartCategories.map((_name, index) => {
-//       return {
-//         name: _name,
-//         data: updatedDataArrays[index],
-//       };
-//     });
-//     // 更新 ChartSeries, Chartcategories, categoriesArray, dataArrays 和 names
-//     ChartSeries = updatedChartSeries;
-//     ChartCategories = updatedChartCategories;
-//     CategoriesArray = updatedCategoriesArray;
-//     DataArrays = updatedDataArrays;
-//     ChartSeriesArray = updatedChartSeriesArray;
-
-//     console.log("ChartSeries", ChartSeries);
-//     console.log("ChartCategories", ChartCategories);
-//     console.log("CategoriesArray", CategoriesArray);
-//     console.log("DataArrays", DataArrays);
-//     console.log("ChartSeriesArray", ChartSeriesArray);
-//   } catch (error) {
-//     console.error("Error fetching data:", error);
-//   }
-// }
