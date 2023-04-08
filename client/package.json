@@ -11,6 +11,7 @@
     "@mui/lab": "5.0.0-alpha.125",
     "@mui/material": "^5.11.16",
     "@mui/x-data-grid": "^5.17.26",
+    "@redstone-finance/evm-connector": "^0.0.22",
     "@refinedev/cli": "^2.1.2",
     "@refinedev/core": "^4.7.2",
     "@refinedev/inferencer": "^3.1.7",
