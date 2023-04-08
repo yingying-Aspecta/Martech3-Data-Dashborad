@@ -1,0 +1,5 @@
+{
+	"dependencies": {
+		"@redstone-finance/evm-connector": "^0.0.22"
+	}
+}
