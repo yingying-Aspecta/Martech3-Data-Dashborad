@@ -138,7 +138,6 @@ const getHolderAndAsset = async (req, res) => {
         axios
           .get("https://blockscout.scroll.io/api?" + params1.toString())
           .then((response1) => {
-            console.log(response1);
             var result = response.data.result;
             var sum = 0;
             result.map((holder) => {
