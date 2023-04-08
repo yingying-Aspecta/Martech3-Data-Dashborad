@@ -39,7 +39,9 @@ const getAllHolderWalletAddress = async (req, res) => {
   const query = {};
 
   try {
-    const holders = await Holder.find(query).select("wallet_address -_id").limit(_limit);
+    const holders = await Holder.find(query)
+      .select("wallet_address -_id")
+      .limit(_limit);
 
     res.status(200).json(holders);
   } catch (error) {
@@ -117,7 +119,7 @@ const deleteHolder = async (req, res) => {
 
 const getHolderAndAsset = async (req, res) => {
   const { contract_address } = req.params;
-  
+
   var num = 1000;
   try {
     const params = new URLSearchParams();
@@ -129,40 +131,61 @@ const getHolderAndAsset = async (req, res) => {
     axios
       .get("https://blockscout.scroll.io/api?" + params.toString())
       .then((response) => {
-        var result = response.data.result;
-        var sum = 0;
-        result.map((holder) => {
-          sum += parseInt(holder.value);
-        });
-        
-        var percent1 = 0;
-        var percent_5 = 0;
-        var percent_2 = 0;
-        var percent_1 = 0;
-        var percent_other = 0;
+        const params1 = new URLSearchParams();
+        params1.append("module", "token");
+        params1.append("action", "getToken");
+        params1.append("contractaddress", contract_address);
+        axios
+          .get("https://blockscout.scroll.io/api?" + params1.toString())
+          .then((response1) => {
+            console.log(response1);
+            var result = response.data.result;
+            var sum = 0;
+            result.map((holder) => {
+              sum += parseInt(holder.value);
+            });
 
-        result.map((holder) => {
-          var percent = parseFloat(holder.value) * 100 / sum;
-          if (percent >= 1) {
-            percent1 += 1;
-          } else if (percent >= 0.5) {
-            percent_5 += 1;
-          } else if (percent >= 0.2) {
-            percent_2 += 1;
-          } else if (percent >= 0.1) {
-            percent_1 += 1;
-          }
-        });
+            var percent1 = 0;
+            var percent_5 = 0;
+            var percent_2 = 0;
+            var percent_1 = 0;
+            var percent__5 = 0;
+            var percent_other = 0;
 
-        percent_other = num - percent1 - percent_5 - percent_2 - percent_1;
-        
-        res.status(200).json({
-          "> 1%": percent1 * 100 / num,
-          "> 0.5%": percent_5 * 100 / num,
-          "> 0.2%": percent_2 * 100 / num,
-          "> 0.1%": percent_1 * 100 / num,
-          "other": percent_other * 100 / num,
-        });
+            var retail_sum = 0;
+            result.map((holder) => {
+              var percent = (parseFloat(holder.value) * 100) / sum;
+              if (percent >= 1) {
+                percent1 += 1;
+              } else if (percent >= 0.5) {
+                percent_5 += 1;
+              } else if (percent >= 0.2) {
+                percent_2 += 1;
+              } else if (percent >= 0.1) {
+                percent_1 += 1;
+              } else if (percent >= 0.05) {
+                percent__5 += 1;
+              } else {
+                retail_sum += parseInt(holder.value);
+              }
+            });
+
+            percent_other = num - percent1 - percent_5 - percent_2 - percent_1;
+
+            res.status(200).json({
+              "> 1%": (percent1 * 100) / num,
+              "> 0.5%": (percent_5 * 100) / num,
+              "> 0.2%": (percent_2 * 100) / num,
+              "> 0.1%": (percent_1 * 100) / num,
+              "> 0.05%": (percent__5 * 100) / num,
+              other: (percent_other * 100) / num,
+              index: Math.floor((retail_sum * 100) / sum),
+              name: response1.data.result.name,
+            });
+          })
+          .catch((error) => {
+            console.log(error);
+          });
       })
       .catch((error) => {
         res.status(500).json({ message: error.message });
@@ -327,7 +350,10 @@ function getHolderNumOfTwoLabel(label1, label2, holders) {
       count += 1;
     }
     holder.social.social_activities.map((activity) => {
-      if (activity.labels.includes(label1) && activity.labels.includes(label2)) {
+      if (
+        activity.labels.includes(label1) &&
+        activity.labels.includes(label2)
+      ) {
         count += 1;
       }
     });
@@ -359,5 +385,5 @@ export {
   deleteHolder,
   getHolderAndAsset,
   getLabelAndHolder,
-  getAllHolderWalletAddress
+  getAllHolderWalletAddress,
 };
