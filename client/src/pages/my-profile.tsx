@@ -1,4 +1,4 @@
-import { Box, Button, TextField, Typography } from "@mui/material";
+import { Box, Button, TextField, Typography, CircularProgress  } from "@mui/material";
 import axios from "axios";
 import { Create, Show, List } from "@refinedev/mui";
 import React from "react";
@@ -164,7 +164,7 @@ const MyProfile = () => {
       fontSize: 14,
     },
   }));
-  
+
   const StyledTableRow = styled(TableRow)(({ theme }) => ({
     '&:nth-of-type(odd)': {
       backgroundColor: theme.palette.action.hover,
@@ -175,7 +175,7 @@ const MyProfile = () => {
     },
   }));
 
-  
+
 
 
 
@@ -294,11 +294,12 @@ const MyProfile = () => {
 
 
   React.useEffect(() => {
+    setLoading(true)
     callContract(contractAddress, dataFeedsArray).then(
-      (data) => { setData(data); console.log('data', data) }
+      (data) => { setData(data); console.log('data', data); setLoading(false)}
     ).catch((error) => {
       callContract(contractAddress, dataFeedsArray).then(
-        (data) => { setData(data); console.log('data', data) }
+        (data) => { setData(data); console.log('data', data); setLoading(false) }
       )
     }
     )
@@ -362,8 +363,12 @@ const MyProfile = () => {
               if (findSuccess) {
                 const res1 = await contract.call("userTagMappings", [userAddress])
                 setContractAddress(res1)
-                if (res1 === "0x0000000000000000000000000000000000000000") { const res = await contract.call("createUserDataMapping", [userAddress, json_mock_data.nft_attitude_oracle, json_mock_data.token_attitude_oracle, json_mock_data.recent_active_trader_type_oracle, json_mock_data.active_trader_type_oracle, json_mock_data.whale_type_oracle, json_mock_data.dealer_oracle, json_mock_data.higher_risk_appetite_oracle]); console.log('reshere', res); setSuccessAddress(userAddress) }
+                if (res1 === "0x0000000000000000000000000000000000000000") {
+                  const res = await contract.call("createUserDataMapping", [userAddress, json_mock_data.nft_attitude_oracle, json_mock_data.token_attitude_oracle, json_mock_data.recent_active_trader_type_oracle, json_mock_data.active_trader_type_oracle, json_mock_data.whale_type_oracle, json_mock_data.dealer_oracle, json_mock_data.higher_risk_appetite_oracle]); console.log('reshere', res);
+                  const res1 = await contract.call("userTagMappings", [userAddress]); setContractAddress(res1); setSuccessAddress(userAddress)
+                }
                 console.log('=============', res1)
+
               }
 
             }
@@ -399,31 +404,32 @@ const MyProfile = () => {
       <List
         title={<Typography variant="h5">{`${successAddress === '' ? 'Your' : successAddress}'s Data Mapping on Scroll`}</Typography>}
       >
-        <Box sx={{marginBottom:3}}>{`Contract Address:${contractAddress === '' ? 'None' : contractAddress}`}</Box>
+        <Box sx={{ marginBottom: 3 }}>{`Contract Address:${contractAddress === '' ? 'None' : contractAddress}`}</Box>
         <TableContainer component={Paper}>
-      <Table sx={{ minWidth: 700 }} aria-label="customized table">
-        <TableHead>
-          <TableRow>
-            <StyledTableCell>User Label</StyledTableCell>
-            <StyledTableCell align="right">Category</StyledTableCell>
-            <StyledTableCell align="right">Explaination</StyledTableCell>
-            <StyledTableCell align="right">Oracle ID</StyledTableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {data.map((row : any) => (
-            <StyledTableRow key={row.name}>
-              <StyledTableCell component="th" scope="row">
-                {row.name}
-              </StyledTableCell>
-              <StyledTableCell align="right">{row.category}</StyledTableCell>
-              <StyledTableCell align="right">{row.explaination}</StyledTableCell>
-              <StyledTableCell align="right">{row.oracleId}</StyledTableCell>
-            </StyledTableRow>
-          ))}
-        </TableBody>
-      </Table>
-    </TableContainer>
+          <Table sx={{ minWidth: 700 }} aria-label="customized table">
+            <TableHead>
+              <TableRow>
+                <StyledTableCell>User Label</StyledTableCell>
+                <StyledTableCell align="right">Category</StyledTableCell>
+                <StyledTableCell align="right">Explaination</StyledTableCell>
+                <StyledTableCell align="right">Oracle ID</StyledTableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody sx={{alignItems:'center'}}>
+              {data.map((row: any) => (
+                <StyledTableRow key={row.name}>
+                  <StyledTableCell component="th" scope="row">
+                    {row.name}
+                  </StyledTableCell>
+                  <StyledTableCell align="right">{row.category}</StyledTableCell>
+                  <StyledTableCell align="right">{row.explaination}</StyledTableCell>
+                  <StyledTableCell align="right">{row.oracleId}</StyledTableCell>
+                </StyledTableRow>
+              ))}
+              {loading && <CircularProgress sx={{alignSelf: 'center'}} />}
+            </TableBody>
+          </Table>
+        </TableContainer>
       </List>
     </Box>
 
