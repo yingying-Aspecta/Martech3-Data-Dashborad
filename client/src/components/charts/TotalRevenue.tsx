@@ -164,7 +164,7 @@ const TotalRevenue: React.FC<TotalRevenueProps> = ({ chartData }) => {
                     />
                     <Stack>
                       <Typography fontSize={15} color="#ffffff">
-                        11.2%
+                        7.3%
                       </Typography>
                       <Typography fontSize={12} color="#808191">
                         Than Last Month

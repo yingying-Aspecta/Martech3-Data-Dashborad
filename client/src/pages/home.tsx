@@ -1,7 +1,7 @@
 import { useList } from "@refinedev/core";
-import { Typography, Box, Stack } from "@mui/material";
+import { Typography, Box, Stack, TextField } from "@mui/material";
 import React, { useState, useEffect } from "react";
-
+import { useForm } from "@refinedev/react-hook-form";
 import {
   PieChart,
   PropertyReferrals,
@@ -47,8 +47,21 @@ const Home = () => {
     DataArrays: [],
     ChartSeriesArray: [],
   });
-
+  //   const MyProfile = () => {
+  const [loading, setLoading] = React.useState(false);
+  //   const [userAddress, setUserAddress] = React.useState("");
+  //   const [successAddress, setSuccessAddress] = React.useState("");
+  const [contractAddress, setContractAddress] = React.useState("");
+  //   const [dataFeedsArray, setDataFeedsArray] = React.useState(Object);
+  const {
+    saveButtonProps,
+    refineCore: { formLoading },
+    register,
+    control,
+    formState: { errors },
+  } = useForm();
   // 获取数据并更新状态
+
   useEffect(() => {
     const fetchDataAndUpdate = async () => {
       const _data = await fetchChartData();
@@ -79,7 +92,32 @@ const Home = () => {
         <Typography fontSize={25} fontWeight={700} color="#ffffff">
           Dashboard
         </Typography>
-
+        <Box
+          component="form"
+          sx={{ display: "flex", flexDirection: "column" }}
+          autoComplete="off"
+        >
+          <TextField
+            {...register("title", {
+              required: "This field is required",
+            })}
+            error={!!(errors as any)?.title}
+            helperText={(errors as any)?.title?.message}
+            margin="normal"
+            fullWidth
+            InputLabelProps={{ shrink: true }}
+            type="text"
+            label="User Address"
+            name="user"
+            onChange={async (e) => {
+              setContractAddress(e.target.value);
+            }}
+            disabled={loading}
+          />
+          {/* <Button>
+                      
+          </Button> */}
+        </Box>
         <Stack
           mt="25px"
           width="100%"
