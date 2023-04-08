@@ -28,7 +28,7 @@ const getHolderOracleDetail = async (req, res) => {
       labelSet.add(label);
     });
     holder.social.social_activities.map((activity) => {
-      for (let label of activity.label) {
+      for (let label of activity.labels) {
         labelSet.add(label);
       }
     });
@@ -37,7 +37,7 @@ const getHolderOracleDetail = async (req, res) => {
     });
     holder.third_party_recommendations.token_recommendations.map(
       (recommendation) => {
-        for (let label of recommendation.label) {
+        for (let label of recommendation.labels) {
           labelSet.add(label);
         }
       }
